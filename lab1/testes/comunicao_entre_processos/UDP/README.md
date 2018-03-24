@@ -33,7 +33,9 @@ javac UDP/*.java
 ## run
 ### iniciar o _server_
 ```bash
-java UDP.UDPServer 6789
+java UDP.UDPServer 6789 &
+netstat -lntup  ## verificar a execução do processo servidor
+# kill -9 <PID> ## finalizar o processo servidor
 ```
 
 ### realizar requisições com o _client_
