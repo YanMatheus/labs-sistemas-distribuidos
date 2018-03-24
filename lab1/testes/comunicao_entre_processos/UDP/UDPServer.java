@@ -21,7 +21,7 @@ public class UDPServer {
       socketB = new DatagramSocket(porta);
 
       // Criar buffer vazio para a recepção da mensagem
-      byte[] buffer = new byte[1000]; // o IP permite mensagens com até 2^16 bytes
+      byte[] buffer = new byte[20]; // o IP permite mensagens com até 2^16 bytes
 
       System.out.println("Servidor ouvindo na porta " + porta + "...");
       while(true) {
