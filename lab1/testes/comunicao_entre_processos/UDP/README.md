@@ -41,7 +41,7 @@ java UDP.UDPServer 6789
 java UDP.UDPClient 6789 localhost "minha mensagem"
 ```
 
-> demo da versão sem o
+> demo da versão sem o tratamento da mensagem
 [![asciicast-old-demo](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW.png)](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW)
 
 
