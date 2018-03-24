@@ -13,7 +13,7 @@ public class UDPClient {
     }
 
 
-    int serverPort  = Integer.parseInt(args[0]); // porta do servidor
+    int serverPort  = Integer.parseInt(args[0]); // Porta do socket do processo alvo
     String hostname = args[1];
     String mensagem = args[2];
     DatagramSocket soqueteA = null;
@@ -28,15 +28,16 @@ public class UDPClient {
       System.out.println("Socket criado com endereço " + soqueteA.getLocalSocketAddress());
 
       byte[] msgBytes = mensagem.getBytes();
-      InetAddress hostA = InetAddress.getByName(hostname); // Determinar o IP do hostname
+      InetAddress hostA = InetAddress.getByName(hostname); // Determinar o Internet address do socket de destino
 
       // Criar o datagrama para envio
       DatagramPacket request = new DatagramPacket(msgBytes, mensagem.length(), hostA, serverPort);
 
-      soqueteA.send(request); // Enviar a mensagem para o servidor
+      // Enviar a mensagem para o outro processo (sem ACK nem reenvio)
+      soqueteA.send(request); // `send` é uma operação não bloqueável
       System.out.println(">> Enviou : '" + mensagem + "'");
 
-      // Preparar o cliente para receber a resposta do servidor
+      // Preparar o cliente para receber a resposta do outro processo
       byte[] buffer = new byte[20];
       DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
 

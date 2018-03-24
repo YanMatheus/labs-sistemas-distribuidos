@@ -1,4 +1,22 @@
 ## vide
+
+Aplicação simples **client-server** que utiliza o _Remote Procedure Call_ (RPC) como camada de comunicação entre o cliente e o servidor.
+A comunicação seguiu o protocolo **request-reply** através de _sockets_ UDP (protocolo sem conexão onde a comunicação é feita por um item de dados chamado _datagram_).
+- Um processo cliente envia uma mensagem para um nó remoto e recebe em resposta a mesma mensagem.
+- O processo servidor fica esperando mensagens numa porta.
+
+```
+Internet Adrress = 138.37.94.248
++----------------+                   +----------------+
+|               ::                   ::               |
+|   (socket)~~~~::~~~~~~[message]~~~~::~~~~~(socket)  |
+|               ::                   ::               |
+|    client     ::                   ::    server     |
+|               ::                   ::               |
++----------------+                   +----------------+
+                                     Internet Address = 138.37.88.249
+```
+
 class | description
 :-----|:------------
 [`DatagramSocket`](https://docs.oracle.com/javase/8/docs/api/java/net/DatagramSocket.html) | Represents a socket for sending and receiving datagram packets.<br> A datagram socket is the sending or receiving point for a packet delivery service. Each packet sent or received on a datagram socket is individually addressed and routed. Multiple packets sent from one machine to another may be routed differently, and may arrive in any order.

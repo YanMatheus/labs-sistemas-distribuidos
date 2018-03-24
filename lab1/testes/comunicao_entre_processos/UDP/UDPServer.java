@@ -21,16 +21,16 @@ public class UDPServer {
       socketB = new DatagramSocket(porta);
 
       // Criar buffer vazio para a recepção da mensagem
-      byte[] buffer = new byte[1000];
+      byte[] buffer = new byte[1000]; // o IP permite mensagens com até 2^16 bytes
 
       System.out.println("Servidor ouvindo na porta " + porta + "...");
       while(true) {
         System.out.println("------------------");
-        // Criar o objeto que receberá a mensagem
+        // Criar o objeto que receberá o datagram (IP+porta+texto) do processo que enviou
         DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 
-        // Bloquear até receber a requisição
-        socketB.receive(request);
+        // Bloquear até receber a requisição e ler a mensagem para o buffer
+        socketB.receive(request); // `receive` é um operação bloqueável
         System.out.println("< " + request.getSocketAddress());
 
         // Criar o datagrama para a resposta a ser enviada
