@@ -30,7 +30,7 @@ public class UDPServer {
         DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 
         // Bloquear até receber a requisição e ler a mensagem para o buffer
-        socketB.receive(request); // `receive` é um operação bloqueável
+        socketB.receive(request); // `receive` é um operação bloqueante
         System.out.println("< " + request.getSocketAddress());
 
         // Trata o texto recebido para gerar uma resposta

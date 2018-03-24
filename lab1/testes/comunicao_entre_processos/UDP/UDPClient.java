@@ -34,7 +34,7 @@ public class UDPClient {
       DatagramPacket request = new DatagramPacket(msgBytes, mensagem.length(), hostA, serverPort);
 
       // Enviar a mensagem para o outro processo (sem ACK nem reenvio)
-      soqueteA.send(request); // `send` é uma operação não bloqueável
+      soqueteA.send(request); // `send` é uma operação não bloqueante
       System.out.println(">> Enviou : '" + mensagem + "'");
 
       // Preparar o cliente para receber a resposta do outro processo
