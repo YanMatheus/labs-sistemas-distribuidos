@@ -25,19 +25,20 @@ class | description
 
 
 ## build
+> (em ../UDP)
 ```bash
-javac UDPClient.java UDPServer.java
+javac UDP/*.java
 ```
 
 ## run
 ### iniciar o _server_
 ```bash
-java UDPServer
+java UDP.UDPServer 6789
 ```
 
 ### realizar requisições com o _client_
 ```bash
-java UDPClient localhost "minha mensagem"
+java UDP.UDPClient 6789 localhost "minha mensagem"
 ```
 
 [![asciicast-demo](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW.png)](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW)
