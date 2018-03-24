@@ -40,6 +40,7 @@ public class UDPClient {
       // Preparar o cliente para receber a resposta do outro processo
       byte[] buffer = new byte[24]; // espaço para o texto do usuário + o sufixo do server
       DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
+      soqueteA.setSoTimeout(5_000); // espera até 5 segundos pela resposta
 
       // Receber a resposta (espera abaixo até receber)
       soqueteA.receive(reply);
