@@ -33,9 +33,13 @@ public class UDPServer {
         socketB.receive(request); // `receive` é um operação bloqueável
         System.out.println("< " + request.getSocketAddress());
 
+        // Trata o texto recebido para gerar uma resposta
+        String replyMsg = new String(request.getData());
+        replyMsg = UDPServer.addSufix(replyMsg);
+
         // Criar o datagrama para a resposta a ser enviada
         DatagramPacket reply = new DatagramPacket(
-          request.getData(), request.getLength(),
+          replyMsg.getBytes(), replyMsg.length(),
           request.getAddress(), request.getPort()
         );
 
@@ -51,6 +55,10 @@ public class UDPServer {
     } finally {
       if (socketB != null) socketB.close();
     }
+  }
+
+  private static String addSufix(String str) {
+    return str + ".foo";
   }
 
 }

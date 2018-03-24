@@ -2,7 +2,7 @@
 
 Aplicação simples **client-server** que utiliza o _Remote Procedure Call_ (RPC) como camada de comunicação entre o cliente e o servidor.
 A comunicação seguiu o protocolo **request-reply** através de _sockets_ UDP (protocolo sem conexão onde a comunicação é feita por um item de dados chamado _datagram_).
-- Um processo cliente envia uma mensagem para um nó remoto e recebe em resposta a mesma mensagem.
+- Um processo cliente envia uma mensagem para um nó remoto e recebe em resposta a mesma mensagem com um sufixo adicionado pelo processo servidor.
 - O processo servidor fica esperando mensagens numa porta.
 
 ```
@@ -41,7 +41,8 @@ java UDP.UDPServer 6789
 java UDP.UDPClient 6789 localhost "minha mensagem"
 ```
 
-[![asciicast-demo](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW.png)](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW)
+> demo da versão sem o
+[![asciicast-old-demo](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW.png)](https://asciinema.org/a/ySdNfB3mNcBZswqhVU4QoZ6CW)
 
 
 
