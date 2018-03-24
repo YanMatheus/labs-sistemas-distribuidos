@@ -13,12 +13,12 @@ public class UDPServer {
 
 
     int porta = Integer.parseInt(args[0]);
-    DatagramSocket socketB = null;
+    DatagramSocket soqueteB = null;
 
     try {
 
       // Criar um socket para o servidor e liga-o à porta definida
-      socketB = new DatagramSocket(porta);
+      soqueteB = new DatagramSocket(porta);
 
       // Criar buffer vazio para a recepção da mensagem
       byte[] buffer = new byte[20]; // o IP permite mensagens com até 2^16 bytes
@@ -30,7 +30,7 @@ public class UDPServer {
         DatagramPacket request = new DatagramPacket(buffer, buffer.length);
 
         // Bloquear até receber a requisição e ler a mensagem para o buffer
-        socketB.receive(request); // `receive` é um operação bloqueante
+        soqueteB.receive(request); // `receive` é um operação bloqueante
         System.out.println("< " + request.getSocketAddress());
 
         // Trata o texto recebido para gerar uma resposta
@@ -45,7 +45,7 @@ public class UDPServer {
 
         // Enviar a resposta ao cliente que a requisitou
         System.out.println("> " + reply.getSocketAddress());
-        socketB.send(reply);
+        soqueteB.send(reply);
       }
 
     } catch (SocketException e) {
@@ -53,7 +53,7 @@ public class UDPServer {
     } catch (IOException e) {
       System.err.println("[IO] " + e.getMessage());
     } finally {
-      if (socketB != null) socketB.close();
+      if (soqueteB != null) soqueteB.close();
     }
   }
 
