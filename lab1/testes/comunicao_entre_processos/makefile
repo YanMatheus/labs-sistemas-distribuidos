@@ -13,7 +13,9 @@ CLASSES = \
   TCP/TCPClient \
   TCP/Documento \
   UDP/UDPServer \
-  UDP/UDPClient
+  UDP/UDPClient \
+  UDP/multicast/Receptor \
+  UDP/multicast/Emissor
 
 default: classes
 
