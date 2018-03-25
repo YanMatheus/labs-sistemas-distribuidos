@@ -27,8 +27,10 @@ public class TCPServer {
         // `accept` bloqueia o servidor até que chegue um pedido de conexão de um cliente
         Socket sc = soqueteServidor.accept(); // Aceitar uma conexão e criar novo socket para atendê-la
 
+        // Criar fluxos de comunicação de entrada e saída com o socket conectado
         DataInputStream dataInStreamClient = new DataInputStream( sc.getInputStream() );
         DataOutputStream dataOutStreamClient = new DataOutputStream( sc.getOutputStream() );
+        // dataOutStreamClient.flush();
 
         String clientId = dataInStreamClient.readUTF();
         dataOutStreamClient.writeUTF("[msg do servidor] Olá client " + clientId);
@@ -44,10 +46,12 @@ public class TCPServer {
         }
 
         try {
+          dataInStreamClient.close();
+          dataOutStreamClient.close();
           sc.close();
           System.out.printf("*** A conexão com '%s' foi fechada\n", clientId);
         } catch (IOException e) {
-          System.err.println("[IO - erro ao fechar socket client] " + e.getMessage());
+          System.err.println("[IO - erro ao fechar client socket] " + e.getMessage());
         }
 
       }
@@ -57,7 +61,7 @@ public class TCPServer {
         try {
           soqueteServidor.close();
         } catch (IOException e) {
-          System.err.println("[IO] " + e.getMessage());
+          System.err.println("[IO - erro ao fechar server socket] " + e.getMessage());
         }
     }
 

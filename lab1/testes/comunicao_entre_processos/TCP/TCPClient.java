@@ -23,8 +23,10 @@ public class TCPClient {
       sc = new Socket(hostname, serverPort);
       System.out.printf("Socket cliente criado com endereço '%s' conectado com socket '%s'\n", sc.getLocalSocketAddress(), sc.getRemoteSocketAddress());
 
+      // Criar fluxos de comunicação de entrada e saída
       DataOutputStream dataOutStream = new DataOutputStream( sc.getOutputStream() );
       DataInputStream dataInStream = new DataInputStream( sc.getInputStream() );
+      // dataOutStream.flush();
 
       dataOutStream.writeUTF(clientId); // envia
 
@@ -34,10 +36,14 @@ public class TCPClient {
       ObjectOutputStream objOutStream = new ObjectOutputStream( sc.getOutputStream() );
 
       Documento d1 = new Documento("Divina Comedia", "Dante"); // objeto a ser transferido
-      Documento d2 = new Documento("Dom Casmurro", "M. de Assis"); // outro objeto a ser transferido
-
       objOutStream.writeObject(d1);
+
+      Documento d2 = new Documento("Dom Casmurro", "M. de Assis"); // outro objeto a ser transferido
       objOutStream.writeObject(d2);
+
+      dataInStream.close();
+      dataOutStream.close();
+      objOutStream.close();
 
     } catch (UnknownHostException | SecurityException e) {
       System.err.println("[InetAddress] " + e.getMessage());
