@@ -1,6 +1,7 @@
 > - (c) https://www.youtube.com/watch?v=HbBxO5RXNhU
 > - vide o paper [rpcgen Programming Guide - FreeBSD](https://docs.freebsd.org/44doc/psd/22.rpcgen/paper.pdf)
 > - [RPC Language Specification](https://docs.oracle.com/cd/E19683-01/816-1435/6m7rrfn9k/index.html)
+> - vide mais detalhes [Using Remote Procedure Calls](https://www.cisco.com/c/en/us/td/docs/ios/sw_upgrades/interlink/r2_0/rpc_pr/rprdesc.pdf)
 
 ## pré-requisitos
 
