@@ -1,9 +1,11 @@
-> (c) https://www.youtube.com/watch?v=HbBxO5RXNhU
+> - (c) https://www.youtube.com/watch?v=HbBxO5RXNhU
+> - vide o paper [rpcgen Programming Guide - FreeBSD](https://docs.freebsd.org/44doc/psd/22.rpcgen/paper.pdf)
+
 
 ## pré-requisitos
 
 ```bash
-## alé do programa `make`
+## além do programa `make`
 sudo apt install rpcbind
 rpcinfo ## verificar se o rpcbind foi instalado
 ```
