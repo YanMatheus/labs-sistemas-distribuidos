@@ -6,7 +6,14 @@
 ```bash
 ## além do programa `make`
 sudo apt install rpcbind
-rpcinfo ## verificar se o rpcbind foi instalado
+## verificar se o rpcbind foi instalado
+rpcinfo
+
+## check to see if you have socket activation enabled
+systemctl status rpcbind.socket
+
+## se der erro, executar
+sudo rpcbind
 ```
 
 ## build & run
