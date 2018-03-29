@@ -658,9 +658,7 @@
  *                                                                             *
  ******************************************************************************/
 
-.text-field{
-    -fx-skin: "jfxtras.styles.jmetro8.MetroTextFieldSkin";
-}
+
 
 .text-input{
     -fx-background-radius: 0, 0;

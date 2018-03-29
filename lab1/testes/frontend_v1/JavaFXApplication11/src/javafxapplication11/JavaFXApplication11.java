@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package frontend;
+package javafxapplication11;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ import javafx.stage.Stage;
  *
  * @author Yan
  */
-public class Frontend extends Application {
+public class JavaFXApplication11 extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
