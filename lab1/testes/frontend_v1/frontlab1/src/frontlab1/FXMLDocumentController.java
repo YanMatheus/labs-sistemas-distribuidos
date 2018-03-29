@@ -12,13 +12,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import java.util.ArrayList;
-
+import java.io.File;
+import javafx.stage.Stage;
+import javafx.stage.DirectoryChooser;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 /**
  *
  * @author Yan
  */
 public class FXMLDocumentController implements Initializable {
-    
+    //Desvio podrão
     @FXML
     private Button calculatebutton;
     @FXML
@@ -28,7 +33,24 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private TextArea output_textarea;
     
-    @FXML //
+    //Copia de diretorios
+    
+    @FXML
+    private TextField input_localdir;
+    @FXML
+    private TextField input_remotedir;
+    @FXML
+    private Button select_localdir;
+    @FXML
+    private Button initcopy;
+    @FXML
+    private ProgressBar progressbar;
+    
+    
+    //Start methods
+    
+    
+    @FXML 
     private void handleButtonAction(ActionEvent event) {
         
         String output;
@@ -53,6 +75,44 @@ public class FXMLDocumentController implements Initializable {
 
         
     }
+    
+    
+     @FXML //Limpa o texto de input do diretorio local
+    private void clearInputLocalDir(ActionEvent event){
+        
+        input_localdir.setText("");
+        
+    }
+     @FXML //Limpa o texto de input do diretorio remoto
+    private void clearInputRemoteDir(ActionEvent event){
+        
+        input_remotedir.setText("");
+        
+    }
+    
+    @FXML //Limpa o texto de input
+    private void initCopy(ActionEvent event){
+        
+        System.out.println("Iniciando transferencia de diretorio");    
+        
+    }
+    
+    @FXML
+    public void selectlocaldir(ActionEvent event){
+        
+        Stage primaryStage = new Stage();
+        primaryStage.setTitle("Selecione um diretórios");
+        
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
+        
+        if(selectedDirectory == null){
+            input_localdir.setPromptText("Nada selecionado, digite ou escolha um diretório local");
+        }else{
+            input_localdir.setText(selectedDirectory.getAbsolutePath());
+        }
+    }
+    
     
     
     
