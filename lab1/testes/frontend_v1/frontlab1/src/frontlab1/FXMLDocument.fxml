@@ -38,9 +38,9 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField layoutX="58.0" layoutY="86.0" prefHeight="33.0" prefWidth="627.0" />
-                        <Button layoutX="684.0" layoutY="86.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="7.0" text="..." />
-                        <TextField layoutX="57.0" layoutY="206.0" prefHeight="33.0" prefWidth="630.0" />
+                        <TextField fx:id="input_localdir" layoutX="58.0" layoutY="86.0" prefHeight="33.0" prefWidth="572.0" promptText="ex: C:/Users/MeuUser/Documents" />
+                        <Button fx:id="select_localdir" layoutX="630.0" layoutY="86.0" mnemonicParsing="false" onAction="#selectlocaldir" prefHeight="33.0" prefWidth="34.0" text="..." />
+                        <TextField fx:id="input_remotedir" layoutX="57.0" layoutY="206.0" prefHeight="33.0" prefWidth="630.0" promptText="ex: C:/Users/UserRemoto/Documents" />
                         <Label layoutX="58.0" layoutY="58.0" text="Escolha o local no qual deseja copiar o diretório remoto" textFill="WHITE">
                            <font>
                               <Font size="15.0" />
@@ -51,8 +51,10 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ProgressBar layoutX="114.0" layoutY="410.0" prefHeight="22.0" prefWidth="558.0" progress="0.0" />
-                        <Button layoutX="341.0" layoutY="317.0" mnemonicParsing="false" text="Iniciar trasnferência" />
+                        <ProgressBar fx:id="progressbar" layoutX="114.0" layoutY="410.0" prefHeight="22.0" prefWidth="558.0" progress="0.0" />
+                        <Button fx:id="initcopy" layoutX="324.0" layoutY="316.0" mnemonicParsing="false" text="Iniciar trasnferência" />
+                        <Button fx:id="cleartextbutton" layoutX="687.0" layoutY="86.0" mnemonicParsing="false" onAction="#clearInputLocalDir" prefHeight="33.0" prefWidth="34.0" />
+                        <Button fx:id="cleartextbutton" layoutX="687.0" layoutY="206.0" mnemonicParsing="false" onAction="#clearInputRemoteDir" prefHeight="33.0" prefWidth="34.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
