@@ -1,0 +1,22 @@
+sequenceDiagram
+  participant Server
+  participant Client
+
+  Server->>Server: Open a socket
+  Server->>Server: Name the socket
+  Server->>Server: Listen for incoming client connections
+  Client->>Client: Open a socket
+  Client ->>+Server: Connect to server
+  Server -->>-Client: Accept connection
+
+  loop Every Sum Request From him
+    Client->>+Server: Write int on output stream (1)
+    Server-->>-Client: Read int from input stream
+    Client->>+Server: Write int on output stream (2)
+    Server-->>-Client: Read int from input stream
+    Server->>Server: Perform sum
+    Server->>+Client: Send sum result
+    Client-->>-Server: Read int from input stream
+  end
+
+  Client->>Client: Close stream and connection
