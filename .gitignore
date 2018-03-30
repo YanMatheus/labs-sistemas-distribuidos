@@ -172,7 +172,7 @@ hs_err_pid*
 .nfs*
 
 ### NetBeans ###
-nbproject/private/
+*/**/nbproject/private/
 build/
 nbbuild/
 dist/
@@ -204,11 +204,19 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/java,linux,windows,eclipse,netbeans,c,c++
 
-/lab1_sistemas_distribuidos/nbproject/private/
-/lab1/testes/frontend_v1/lab1/nbproject/private/
-/lab1/testes/frontend_v1/frontend/nbproject/private/
-/lab1/testes/frontend_v1/Frontend/nbproject/private/
-/lab1/testes/frontend_v1/frontlab1/nbproject/private/
-/lab1/testes/frontend_v1/JavaFXApplication9/nbproject/private/
-/lab1/testes/frontend_v1/JavaFXApplication10/nbproject/private/
-/lab1/testes/frontend_v1/JavaFXApplication11/nbproject/private/
+# JavaFx 8
+
+.metadata
+local.properties
+.settings/
+# Eclipse Core
+.project
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Java annotation processor (APT)
+.factorypath
