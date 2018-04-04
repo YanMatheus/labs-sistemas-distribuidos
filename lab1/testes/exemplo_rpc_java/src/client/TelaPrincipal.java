@@ -44,6 +44,7 @@ public class TelaPrincipal {
     final JTextField num2 = new JTextField(10);
     final JTextArea areaResposta = new JTextArea(0, 28);
     JButton btnSomar = new JButton("Somar");
+    JButton btnMultiplicar = new JButton("Multiplicar");
 
 		janelaPrincipal.setTitle("Example Remote Procedure Call");
 		janelaPrincipal.setResizable(false);
@@ -57,8 +58,10 @@ public class TelaPrincipal {
     panel.add(num1);
     panel.add(num2);
     panel.add(btnSomar);
+    panel.add(btnMultiplicar);
     panel.add(areaResposta);
 
+    // adicionando a ação para o botão `Somar`
     btnSomar.addActionListener((ActionEvent ae) -> {
       String strNum1 = num1.getText().trim();
       String strNum2 = num2.getText().trim();
@@ -73,6 +76,34 @@ public class TelaPrincipal {
         try {
           areaResposta.getDocument().insertString(0,
             String.format("> %s + %s = %d\n", strNum1, strNum2, soma), null);
+        } catch (BadLocationException e) {
+          e.printStackTrace();
+        }
+
+      } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(null,
+          "Os números devem ser menores que "+ Integer.MAX_VALUE,
+          "Formato Inválido", JOptionPane.ERROR_MESSAGE);
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    });
+
+    // adicionando a ação para o botão `Multiplicar`
+    btnMultiplicar.addActionListener((ActionEvent ae) -> {
+      String strNum1 = num1.getText().trim();
+      String strNum2 = num2.getText().trim();
+
+      try {
+
+        int num3 = Integer.parseInt(strNum1);
+        int num4 = Integer.parseInt(strNum2);
+        int soma = clientController.callRPCMultiplicar(num3, num4);
+
+        // Inserir resposta na primeira linha
+        try {
+          areaResposta.getDocument().insertString(0,
+            String.format("> %s * %s = %d\n", strNum1, strNum2, soma), null);
         } catch (BadLocationException e) {
           e.printStackTrace();
         }

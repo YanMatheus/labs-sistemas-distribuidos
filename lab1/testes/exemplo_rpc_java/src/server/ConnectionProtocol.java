@@ -4,11 +4,60 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.*;
 
+@FunctionalInterface
+interface RunnableRemoteProcedure {
+  void run(DataInputStream in, DataOutputStream out) throws EOFException, IOException;
+}
+
+/**
+ *
+ */
 public class ConnectionProtocol {
 
   private Socket socket;
-  private DataInputStream in = null;
-  private DataOutputStream out = null;
+  DataInputStream in = null;
+  DataOutputStream out = null;
+
+  /**
+   * Realiza as ações para o
+   * procedimento remoto `Somar`.
+   * @throws EOFException - if this input stream reaches the end before reading four bytes.
+   * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
+   */
+  static void doSomar(DataInputStream in, DataOutputStream out) throws EOFException, IOException {
+    // [receive] ler os parâmetros de entrada para o procedimento `somar`
+    int arg1 = in.readInt();
+    int arg2 = in.readInt();
+    InfoLog.printToStdout("client called RPC somar(%d, %d)", arg1, arg2);
+
+    // realizar a operação do procedimento `somar`
+    int result = arg1 + arg2;
+
+    // [send] escrever o resultado do procedimento `somar`
+    out.writeInt(result);
+    InfoLog.printToStdout("sended int '%d' to client", result);
+  }
+
+  /**
+   * Realiza as ações para o
+   * procedimento remoto `Multiplicar`.
+   * @throws EOFException - if this input stream reaches the end before reading four bytes.
+   * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
+   */
+  static void doMultiplicar(DataInputStream in, DataOutputStream out) throws EOFException, IOException {
+    // [receive] ler os parâmetros de entrada para o procedimento `multiplicar`
+    int arg1 = in.readInt();
+    int arg2 = in.readInt();
+    InfoLog.printToStdout("client called RPC multiplicar(%d, %d)", arg1, arg2);
+
+    // realizar a operação do procedimento `multiplicar`
+    int result = arg1 * arg2;
+
+    // [send] escrever o resultado do procedimento `multiplicar`
+    out.writeInt(result);
+    InfoLog.printToStdout("sended int '%d' to client", result);
+  }
+
 
   /**
    * Inicializa uma conexão com um um socket
@@ -29,33 +78,26 @@ public class ConnectionProtocol {
   }
 
   /**
-   * Realiza a leitura de dois inteiros
-   * no fluxo de dados e soma eles.
-   * @return A operação de soma entre dois inteiros.
-   * @throws EOFException
-   * @throws IOException
+   * Tenta recuperar o identificador
+   * do procedimento remoto.
+   * @return O identificador encontrado.
+   * @throws EOFException - if this input stream reaches the end before reading four bytes.
+   * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
    */
-  private int doSomar() throws EOFException, IOException {
-    if (in == null) return 0;
-
-    int arg1 = in.readInt();
-    int arg2 = in.readInt();
-    InfoLog.printToStdout("client called soma(%d, %d)", arg1, arg2);
-    return arg1 + arg2;
+  short getRemoteProcedureIdentifier() throws EOFException, IOException {
+    return this.in.readShort();
   }
 
   /**
-   * Realiza a soma e envia para o <em>client</em>
-   * que iniciou a conexão.
-   * @throws EOFException
-   * @throws IOException
+   * Escreve a confirmação (ou não) se
+   * uma função remota foi encontrada no servidor.
    */
-  void sendSoma() throws EOFException, IOException {
-    if (out == null) return;
-
-    int result = doSomar();
-    out.writeInt(result);
-    InfoLog.printToStdout("sended int '%d' to client", result);
+  void sendRPCStatus(Boolean founded) {
+    try {
+      this.out.writeBoolean(founded);
+    } catch (IOException ex) {
+      InfoLog.printToStderr("[error:%s] to write boolean", this.getClass().getName());
+    }
   }
 
   void close() {
