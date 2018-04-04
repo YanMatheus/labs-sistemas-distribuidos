@@ -16,6 +16,63 @@ public class ClientSocketController {
   DataInputStream in;
   DataOutputStream out;
 
+  /**
+   *
+   * @param num1 -
+   * @param num2 -
+   * @return
+   */
+  public int callRPCSomar(int num1, int num2) throws IOException {
+    this.out.writeShort(1);
+    // [receive] ler a confirmação do server sobre se o procedimento remoto foi encontrado
+    Boolean rpcFound = this.in.readBoolean();
+
+    if (rpcFound) {
+      // [send] escrever os parâmetros de entrada que o procedimento espera
+      this.out.writeInt(num1);
+      this.out.writeInt(num2);
+
+      // [receive] ler o resultado obtido da chamada do procedimento
+      int result = this.in.readInt(); // Bloqueia até receber a resposta do server
+      return result;
+    }
+
+    // TODO: tratar erro de `RP not found`
+    return 0;
+  }
+
+  /**
+   *
+   * @param num1 -
+   * @param num2 -
+   * @return
+   */
+  public int callRPCMultiplicar(int num1, int num2) throws IOException {
+    this.out.writeShort(2);
+    // [receive] ler a confirmação do server sobre se o procedimento remoto foi encontrado
+    Boolean rpcFound = this.in.readBoolean();
+
+    if (rpcFound) {
+      // [send] escrever os parâmetros de entrada que o procedimento espera
+      this.out.writeInt(num1);
+      this.out.writeInt(num2);
+
+      // [receive] ler o resultado obtido da chamada do procedimento
+      int result = this.in.readInt(); // Bloqueia até receber a resposta do server
+      return result;
+    }
+
+    // TODO: tratar erro de `RP not found`
+    return 0;
+  }
+
+
+  /**
+   *
+   * @param serverHost - the server host name, or null for the loopback address.
+   * @param serverPort - the port number which server host is listening.
+   * @throws IOExcepetion
+   */
   public ClientSocketController(String serverHost, int serverPort) throws IOException {
     try {
 
@@ -39,14 +96,11 @@ public class ClientSocketController {
     }
   }
 
-  public int callRPCSomar(int num1, int num2) throws IOException {
-    this.out.writeInt(num1);
-    this.out.writeInt(num2);
-
-    int soma = this.in.readInt(); // Bloqueia até receber a resposta do server
-    return soma;
-  }
-
+  /**
+   * Tenta fechar o socket criado
+   * assim como os fluxos de dados
+   * de entrada e saída.
+   */
   public void closeSocket() {
     try {
 

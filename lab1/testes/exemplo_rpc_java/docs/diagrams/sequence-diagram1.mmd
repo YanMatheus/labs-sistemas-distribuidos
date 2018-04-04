@@ -9,14 +9,21 @@ sequenceDiagram
   Client ->>+Server: Connect to server
   Server -->>-Client: Accept connection
 
-  loop Every Sum Request From him
-    Client->>+Server: Write int on output stream (1)
-    Server-->>-Client: Read int from input stream
-    Client->>+Server: Write int on output stream (2)
-    Server-->>-Client: Read int from input stream
-    Server->>Server: Perform sum
-    Server->>+Client: Send sum result
-    Client-->>-Server: Read int from input stream
+  loop Every Click from GUI
+    Client->>+Server: Send RPC identifier
+    Server-->>-Client: Receive RPC identifier
+    alt RP exists on server
+      Server->>+Client: Send status "true"
+      Client-->>-Server: Receive status
+      Client->>+Server: Send procedure's input
+      Server-->>-Client: Receive procedure's input
+      Server->>Server: Run the called procedure
+      Server->>+Client: Send result
+      Client-->>-Server: Receive procedure's output
+    else RP not found
+      Server->>+Client: Send status "false"
+      Client-->>-Server: Receive status
+    end
   end
 
   Client->>Client: Close stream and connection
