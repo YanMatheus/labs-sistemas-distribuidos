@@ -31,5 +31,5 @@ cd build
 java server.ServerSocketController &
 java client.TelaPrincipal &
 
-netstat -t6 ## verificar estado da conexão
+netstat -lnt6 ## verificar estado da conexão
 ```
