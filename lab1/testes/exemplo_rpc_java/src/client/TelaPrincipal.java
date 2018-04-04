@@ -61,6 +61,7 @@ public class TelaPrincipal {
     panel.add(btnMultiplicar);
     panel.add(areaResposta);
 
+    // adicionando a ação para o botão `Somar`
     btnSomar.addActionListener((ActionEvent ae) -> {
       String strNum1 = num1.getText().trim();
       String strNum2 = num2.getText().trim();
