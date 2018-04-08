@@ -29,7 +29,7 @@ public class ClientController {
 
             /* Montando o pacote que representará os dados para a RP */
             // definição dos parâmetros da função remota
-            ArrayList<Object> RPArgs = new ArrayList<>(2);
+            ArrayList<Object> RPArgs = new ArrayList<>(3);
             RPArgs.add(0, 2);
             RPArgs.add(1, 123);
             RPArgs.add(2, "Foo");
