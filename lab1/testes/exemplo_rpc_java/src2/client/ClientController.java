@@ -39,7 +39,7 @@ public class ClientController {
 
             // [send] envio do objeto que representa os meta-dados da RP
             objOutStream.writeObject(RPData);
-            System.out.printf("[send] '%s' call somar(%d, %d)\n", "Foo", 2, 123);
+            System.out.printf("[send] '%s' call somar(%d, %d)\n", RPArgs.get(2), RPArgs.get(0), RPArgs.get(1));
 
             // [receive] recebimento do resultado retornado da RPC
             int result = in.readInt();
