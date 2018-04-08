@@ -36,17 +36,19 @@ public class ServerController {
                 try {
 
                     RPCMetaData RPData = (RPCMetaData) objInputStream.readObject();
+                    ArrayList<Object> RPParams = RPData.getArgs();
                     System.out.printf("[read] id=%h\n", RPData.getId());
 
+                    if ( RPData.getId() == RPCMetaData.ID_RP_SOMAR) {
                     // RP realiza a operação para a func com id passado
-                    ArrayList<Object> RPParams = RPData.getArgs();
                     int arg1 = (int) RPParams.get(0);
                     int arg2 = (int) RPParams.get(1);
-                    int result = arg1 + arg2;
-                    String id = (String) RPParams.get(2);
+                        int result = ServerController.somar(arg1, arg2);
+                        dataOutStreamClient.writeInt(result);
 
-                    dataOutStreamClient.writeInt(result);
-                    System.out.printf("[send] somar(%d, %d) para %s\n", arg1, arg2, id);
+                    String id = (String) RPParams.get(2);
+                        System.out.printf("[send] somar(%d, %d) para '%s'\n", arg1, arg2, id);
+                    }
 
                 } catch (IOException e) { break; }
 

@@ -17,6 +17,8 @@ import java.util.ArrayList;
  * @author micael
  */
 public class RPCMetaData implements Serializable {
+    public static final short ID_RP_SOMAR = 1;
+
     private static final long serialVersionUID = 1L;
     private short id;
     private ArrayList<Object> args;

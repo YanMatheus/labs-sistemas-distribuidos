@@ -35,7 +35,7 @@ public class ClientController {
             RPArgs.add(2, "Foo");
 
             // construção do objeto que será recebido pelo servidor
-            RPCMetaData RPData = new RPCMetaData( new Short("1"), RPArgs );
+            RPCMetaData RPData = new RPCMetaData(RPCMetaData.ID_RP_SOMAR, RPArgs);
 
             // [send] envio do objeto que representa os meta-dados da RP
             objOutStream.writeObject(RPData);
