@@ -7,6 +7,16 @@ import java.util.ArrayList;
 
 public class ServerController {
 
+    /**
+     * Representa o procedimento remoto.
+     * @param a
+     * @param b
+     * @return A soma.
+     */
+    private static int somar(int a, int b) {
+        return a + b;
+    }
+
     public static void main(String[] args) throws ClassNotFoundException, IOException {
         if (args.length != 1) {
             System.err.println("params: <server-port>");
@@ -40,13 +50,13 @@ public class ServerController {
                     System.out.printf("[read] id=%h\n", RPData.getId());
 
                     if ( RPData.getId() == RPCMetaData.ID_RP_SOMAR) {
-                    // RP realiza a operação para a func com id passado
-                    int arg1 = (int) RPParams.get(0);
-                    int arg2 = (int) RPParams.get(1);
+                        // RP realiza a operação para a func com id passado
+                        int arg1 = (int) RPParams.get(0);
+                        int arg2 = (int) RPParams.get(1);
                         int result = ServerController.somar(arg1, arg2);
                         dataOutStreamClient.writeInt(result);
 
-                    String id = (String) RPParams.get(2);
+                        String id = (String) RPParams.get(2);
                         System.out.printf("[send] somar(%d, %d) para '%s'\n", arg1, arg2, id);
                     }
 
