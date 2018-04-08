@@ -91,12 +91,14 @@ public class ConnectionProtocol {
   /**
    * Escreve a confirmação (ou não) se
    * uma função remota foi encontrada no servidor.
+   * @param found - Must be <code>true</code> if the remote procedure was found.
    */
-  void sendRPCStatus(Boolean founded) {
+  void sendRPCStatus(Boolean found) {
     try {
-      this.out.writeBoolean(founded);
+      this.out.writeBoolean(found);
     } catch (IOException ex) {
-      InfoLog.printToStderr("[error:%s] to write boolean", this.getClass().getName());
+      Logger.getLogger( ConnectionProtocol.class.getName() )
+            .log(Level.SEVERE, "Erro de I/O ao enviar status da RP", ex);
     }
   }
 
