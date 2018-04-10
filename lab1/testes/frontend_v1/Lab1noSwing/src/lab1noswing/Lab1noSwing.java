@@ -1,21 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lab1noswing;
-
+import javax.swing.*;
+import lab1noswing.ConnectionInputDialog;
 /**
  *
  * @author Yan
  */
 public class Lab1noSwing {
-
-    /**
-     * @param args the command line arguments
-     */
+    static JFrame frame = new JFrame();
+    static String userIP, userPort; 
+    
+   
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        
+        ConnectionInputDialog dialog = new ConnectionInputDialog(frame, true);
+        
+        
+        if(dialog.isReady == true){
+            
+                userIP = dialog.getIPInput();
+                userPort = dialog.getPortInput();
+                System.out.println("IP inserido: "+userIP+ "/ Porta inserida: "+userPort);
+                //Começa conexão
+        }
+        dialog.setVisible(true);
     }
     
 }
