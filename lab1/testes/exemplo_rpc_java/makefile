@@ -3,7 +3,7 @@
 
 all:
 	mkdir -p build
-	javac -d build src/client/*.java src/server/*.java
+	javac -d build src/shared/*.java src/client/*.java src/server/*.java
 
 clean:
 	$(RM) -rf build
