@@ -1,12 +1,15 @@
 package server;
 
+import shared.RPCMetaData;
+
 import java.io.*;
 import java.net.*;
 import java.util.logging.*;
+import java.util.ArrayList;
 
 @FunctionalInterface
 interface RunnableRemoteProcedure {
-  void run(DataInputStream in, DataOutputStream out) throws EOFException, IOException;
+  void run(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException;
 }
 
 /**
@@ -15,8 +18,8 @@ interface RunnableRemoteProcedure {
 public class ConnectionProtocol {
 
   private Socket socket;
-  DataInputStream in = null;
-  DataOutputStream out = null;
+  ObjectInputStream in;
+  ObjectOutputStream out;
 
   /**
    * Realiza as ações para o
@@ -24,10 +27,11 @@ public class ConnectionProtocol {
    * @throws EOFException - if this input stream reaches the end before reading four bytes.
    * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
    */
-  static void doSomar(DataInputStream in, DataOutputStream out) throws EOFException, IOException {
-    // [receive] ler os parâmetros de entrada para o procedimento `somar`
-    int arg1 = in.readInt();
-    int arg2 = in.readInt();
+  static void doSomar(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException {
+    ArrayList<Object> args = rmd.getArgs();
+
+    int arg1 = (int) args.get(0);
+    int arg2 = (int) args.get(1);
     InfoLog.printToStdout("client called RPC somar(%d, %d)", arg1, arg2);
 
     // realizar a operação do procedimento `somar`
@@ -35,7 +39,8 @@ public class ConnectionProtocol {
 
     // [send] escrever o resultado do procedimento `somar`
     out.writeInt(result);
-    InfoLog.printToStdout("sended int '%d' to client", result);
+    out.flush();
+    InfoLog.printToStdout("sended %s '%d' to client", "int", result);
   }
 
   /**
@@ -44,10 +49,11 @@ public class ConnectionProtocol {
    * @throws EOFException - if this input stream reaches the end before reading four bytes.
    * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
    */
-  static void doMultiplicar(DataInputStream in, DataOutputStream out) throws EOFException, IOException {
-    // [receive] ler os parâmetros de entrada para o procedimento `multiplicar`
-    int arg1 = in.readInt();
-    int arg2 = in.readInt();
+  static void doMultiplicar(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException {
+    ArrayList<Object> args = rmd.getArgs();
+
+    int arg1 = (int) args.get(0);
+    int arg2 = (int) args.get(1);
     InfoLog.printToStdout("client called RPC multiplicar(%d, %d)", arg1, arg2);
 
     // realizar a operação do procedimento `multiplicar`
@@ -55,7 +61,8 @@ public class ConnectionProtocol {
 
     // [send] escrever o resultado do procedimento `multiplicar`
     out.writeInt(result);
-    InfoLog.printToStdout("sended int '%d' to client", result);
+    out.flush();
+    InfoLog.printToStdout("sended %s '%d' to client", "int", result);
   }
 
 
@@ -66,26 +73,16 @@ public class ConnectionProtocol {
    */
   public ConnectionProtocol(Socket targetSocket) {
     this.socket = targetSocket;
+
     try {
 
-      this.in = new DataInputStream( socket.getInputStream() );
-      this.out = new DataOutputStream( socket.getOutputStream() );
+      this.out = new ObjectOutputStream( socket.getOutputStream() );
+      this.in = new ObjectInputStream( socket.getInputStream() );
 
     } catch (IOException ex) {
       Logger.getLogger(ConnectionProtocol.class.getName() )
             .log(Level.SEVERE, "Erro de I/O ao abrir stream", ex);
     }
-  }
-
-  /**
-   * Tenta recuperar o identificador
-   * do procedimento remoto.
-   * @return O identificador encontrado.
-   * @throws EOFException - if this input stream reaches the end before reading four bytes.
-   * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
-   */
-  short getRemoteProcedureIdentifier() throws EOFException, IOException {
-    return this.in.readShort();
   }
 
   /**
@@ -96,10 +93,21 @@ public class ConnectionProtocol {
   void sendRPCStatus(Boolean found) {
     try {
       this.out.writeBoolean(found);
+      this.out.flush();
+      InfoLog.printToStdout("sended status 'RPC %s'", found ? "FOUND" : "NOT FOUND");
     } catch (IOException ex) {
       Logger.getLogger( ConnectionProtocol.class.getName() )
             .log(Level.SEVERE, "Erro de I/O ao enviar status da RP", ex);
     }
+  }
+
+  /**
+   * Lê a estrutura de dados que representa
+   * os meta-dados da remote procedure chamada pelo cliente.
+   * @return Os meta-dados do procedimento remoto.
+   */
+  RPCMetaData receiveRPCMetaData() throws IOException, ClassNotFoundException {
+    return (RPCMetaData) this.in.readObject();
   }
 
   void close() {
