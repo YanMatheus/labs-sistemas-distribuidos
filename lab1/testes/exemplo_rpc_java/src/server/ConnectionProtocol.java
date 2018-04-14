@@ -110,6 +110,10 @@ public class ConnectionProtocol {
     return (RPCMetaData) this.in.readObject();
   }
 
+  /**
+   * Fecha o fluxo (stream) de dados do cliente
+   * e a conexão com o socket do mesmo.
+   */
   void close() {
     try {
 
