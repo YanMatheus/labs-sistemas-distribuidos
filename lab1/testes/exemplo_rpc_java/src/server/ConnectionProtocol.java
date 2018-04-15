@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class ConnectionProtocol {
 
   private Socket socket;
-  ObjectInputStream in;
-  ObjectOutputStream out;
+  private ObjectInputStream in;
+  private ObjectOutputStream out;
 
   /**
    * Inicializa uma conexão com um um socket
@@ -34,6 +34,13 @@ public class ConnectionProtocol {
       Logger.getLogger(ConnectionProtocol.class.getName() )
             .log(Level.SEVERE, "Erro de I/O ao abrir stream", ex);
     }
+  }
+
+  /**
+   * @return O fluxo de dados de saída aberto (no construtor).
+   */
+  ObjectOutputStream getOutputStream() {
+    return this.out;
   }
 
   /**
