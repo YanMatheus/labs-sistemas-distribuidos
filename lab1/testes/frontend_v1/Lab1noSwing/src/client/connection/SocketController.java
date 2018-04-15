@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,30 +28,14 @@ public class SocketController {
      * @throws IOException
      */
     public SocketController(String serverHost, int serverPort) throws IOException {
-        try {
+        // Conectar com um processo remoto
+        cs = new Socket(serverHost, serverPort);
+        System.out.printf("Socket cliente criado com endereço '%s' conectado com socket '%s'\n",
+            cs.getLocalSocketAddress(), cs.getRemoteSocketAddress());
 
-            // Conectar com um processo remoto
-            cs = new Socket(serverHost, serverPort);
-            System.out.printf("Socket cliente criado com endereço '%s' conectado com socket '%s'\n",
-                cs.getLocalSocketAddress(), cs.getRemoteSocketAddress());
-
-            // Abrir um canal para a troca de mensagens
-            in = new ObjectInputStream( cs.getInputStream() );
-            out = new ObjectOutputStream( cs.getOutputStream() );
-
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(SocketController.class.getName())
-                  .log(Level.SEVERE, "Endereço de IP do host não foi determinado", ex);
-            System.exit(2);
-        } catch (SecurityException ex) {
-            Logger.getLogger(SocketController.class.getName())
-                  .log(Level.SEVERE, "Erro de segurança", ex);
-            System.exit(3);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(SocketController.class.getName())
-                  .log(Level.SEVERE, "Porta fora do range válido (entre 0 e 65.535)", ex);
-            System.exit(4);
-        }
+        // Abrir um canal para a troca de mensagens
+        in = new ObjectInputStream( cs.getInputStream() );
+        out = new ObjectOutputStream( cs.getOutputStream() );
     }
 
     /**

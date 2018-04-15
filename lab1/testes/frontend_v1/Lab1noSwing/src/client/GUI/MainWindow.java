@@ -1,8 +1,6 @@
 package client.GUI;
 
 import client.connection.SocketController;
-import java.io.IOException;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -11,31 +9,31 @@ import javax.swing.JOptionPane;
  * @author micael
  */
 public class MainWindow extends javax.swing.JFrame {
-    ClientController cc;
+    ClientController cc = null;
 
     public MainWindow(ClientController cc) {
+        initComponents();
         this.cc = cc;
 
-        JDialog connectionDialog = new ConnectionDialog(this, true);
-        connectionDialog.setVisible(true);
+        ConnectionDialog connDialog = new ConnectionDialog(this, true);
+        connDialog.setVisible(true);
 
         do {
+
             try {
-                // TODO: recuperar parâmetros do dialog
-                SocketController cs = new SocketController("localhost", 4444);
+                SocketController cs = new SocketController(connDialog.ip, connDialog.port);
                 cc.setClientSocket(cs);
                 break;
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this,
                     "Não foi possível conectar",
                     "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
-                connectionDialog.setVisible(true);
+                connDialog.setVisible(true);
             }
 
         } while (true);
 
-        connectionDialog.dispose();
-        initComponents();
+        connDialog.dispose();
     }
 
 
@@ -52,7 +50,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         clearButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextPane1 = new javax.swing.JTextPane();
+        historyPanel = new javax.swing.JTextPane();
         jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -91,7 +89,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         clearButton.setBackground(new java.awt.Color(0, 230, 118));
-        clearButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/drawables/bin.png"))); // NOI18N
+        clearButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/GUI/drawables/bin.png"))); // NOI18N
         clearButton.setBorderPainted(false);
         clearButton.setIconTextGap(1);
         clearButton.setNextFocusableComponent(calculateButton);
@@ -103,9 +101,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jScrollPane2.setBorder(null);
 
-        jTextPane1.setEditable(false);
-        jTextPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane2.setViewportView(jTextPane1);
+        historyPanel.setEditable(false);
+        historyPanel.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane2.setViewportView(historyPanel);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabel2.setForeground(java.awt.Color.lightGray);
@@ -190,7 +188,10 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
+        if ( input_FTF.getText().isEmpty() ) return;
         // TODO: invocar o procedimento remoto do cálculo do Desvio Padrão
+        double x = this.cc.calcularDesvioPadrao( input_FTF.getText() );
+        historyPanel.setText(">> " + x); // TODO: alterar aqui
     }//GEN-LAST:event_calculateButtonActionPerformed
 
 
@@ -198,6 +199,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton calculateButton;
     private javax.swing.JButton clearButton;
     private javax.swing.JTree dirTree;
+    private javax.swing.JTextPane historyPanel;
     private javax.swing.JFormattedTextField input_FTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -205,7 +207,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextPane jTextPane1;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JPanel tabs_JP;
     // End of variables declaration//GEN-END:variables

@@ -18,6 +18,13 @@ public class ClientController {
     }
 
 
+    public double calcularDesvioPadrao(String valoresStr) {
+        // TODO: quebrar os valores em um array double
+
+        return 0f;
+    }
+
+
     public static void main(String[] args) {
 
         // estilo
@@ -32,17 +39,6 @@ public class ClientController {
             java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        /*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.setLocationRelativeTo(null);
-                mainWindow.setVisible(true);
-
-            }
-        });
-        */
 
         ClientController cc = new ClientController();
         MainWindow mainWindow = new MainWindow(cc);

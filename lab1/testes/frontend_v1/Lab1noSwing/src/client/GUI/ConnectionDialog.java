@@ -9,6 +9,9 @@ package client.GUI;
  */
 public class ConnectionDialog extends javax.swing.JDialog {
 
+    String ip = null;
+    int port = 0;
+
     public ConnectionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
 
@@ -76,6 +79,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
         ipTextField.setBackground(java.awt.Color.darkGray);
         ipTextField.setBorder(null);
         ipTextField.setForeground(java.awt.Color.white);
+        ipTextField.setText("localhost");
         ipTextField.setToolTipText("digite o endereço IP do servidor");
         ipTextField.setCaretColor(java.awt.Color.white);
         ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -84,6 +88,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
         portTextField.setBackground(java.awt.Color.darkGray);
         portTextField.setBorder(null);
         portTextField.setForeground(java.awt.Color.white);
+        portTextField.setText("4444");
         portTextField.setToolTipText("digite a porta para a conexão com o servidor");
         portTextField.setCaretColor(java.awt.Color.white);
         portTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
@@ -159,12 +164,11 @@ public class ConnectionDialog extends javax.swing.JDialog {
         String serverIP = ipTextField.getText().trim();
 
         if (portText.isEmpty() || serverIP.isEmpty()) return;
-        int serverPort = Integer.parseInt(portText);
+
+        this.ip   = serverIP;
+        this.port = Integer.parseInt(portText);
 
         this.setVisible(false);
-        System.out.println(serverIP + ":" + serverPort);
-
-        // TODO: enviar parâmetros coletados para o `parent`
     }//GEN-LAST:event_connectButtonActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
