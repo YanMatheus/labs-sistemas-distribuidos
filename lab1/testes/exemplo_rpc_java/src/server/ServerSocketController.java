@@ -20,8 +20,8 @@ public class ServerSocketController {
    * @param m -
    */
   public static void setRemoteProcedures(Map<Short, RunnableRemoteProcedure> m) {
-    m.put(      RPCMetaData.ID_RP_SOMAR, ConnectionProtocol::doSomar);
-    m.put(RPCMetaData.ID_RP_MULTIPLICAR, ConnectionProtocol::doMultiplicar);
+    m.put(      RPCMetaData.ID_RP_SOMAR, RemoteProcedure::doSomar);
+    m.put(RPCMetaData.ID_RP_MULTIPLICAR, RemoteProcedure::doMultiplicar);
   }
 
 
@@ -42,7 +42,7 @@ public class ServerSocketController {
       InfoLog.printToStdout("connection establish with '%s'",
                             cs.getRemoteSocketAddress());
 
-
+      // Inicia uma nova thread para tratar esse client (thread per connection)
       ConnectionProtocol cp = new ConnectionProtocol(cs);
       // >>>>>>>>>>
       do {
