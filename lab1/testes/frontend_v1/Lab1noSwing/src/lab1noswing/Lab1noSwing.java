@@ -2,6 +2,7 @@ package lab1noswing;
 import javax.swing.*;
 import lab1noswing.MainWindow;
 import lab1noswing.ConnectionDialog;
+import java.util.ArrayList;
 /**
  *
  * @author Yan
@@ -10,7 +11,9 @@ public class Lab1noSwing {
     static JPanel frame = new JPanel();
     static JFrame jframe = new JFrame();
     static JDialog connectionInput = new ConnectionDialog(jframe,true);
-    public String userIP, userPort; 
+    public String userIP, userPort;
+    public String dv_result;
+    public double[] inputDVList;
     
    
     
@@ -25,6 +28,11 @@ public class Lab1noSwing {
      public String getUserPort(){
         return userPort;
     }
+     
+     public void setDVInput(String inputInicial){
+         
+                  
+     }
     
     public static void main(String[] args) {
       
