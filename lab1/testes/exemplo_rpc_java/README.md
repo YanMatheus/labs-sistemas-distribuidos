@@ -20,7 +20,7 @@ Assim, devido à fila de sockets em espera, os demais clientes que estabelecerem
     │   ├── ConnectionProtocol.java
     │   ├── InfoLog.java
     │   ├── RemoteProcedure.java
-    │   └── ServerSocketController.java     [main]
+    │   └── MultiThreadedServer.java     [main]
     └── shared
         └── RPCMetaData.java
 ```
@@ -29,7 +29,7 @@ Assim, devido à fila de sockets em espera, os demais clientes que estabelecerem
 
 ```bash
 make && cd build
-java server.ServerSocketController &
+java server.MultiThreadedServer &
 java client.TelaPrincipal
 
 netstat -lnt6 ## verificar estado da conexão tcp6
