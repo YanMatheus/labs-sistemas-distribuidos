@@ -1,22 +1,24 @@
+package client.GUI;
 
-package lab1noswing;
-import javax.swing.*;
-import lab1noswing.Lab1noSwing;
 /**
+ * "Janela" inicial para a recuperação
+ * dos parâmetros para a conexão remota.
  *
  * @author Yan
+ * @author micael
  */
-
 public class ConnectionDialog extends javax.swing.JDialog {
 
-public Lab1noSwing lab1 ;
     public ConnectionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+
         initComponents();
+        ipTextField.requestFocusInWindow();
+
         this.setLocationRelativeTo(null);
     }
-    
- 
+
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -38,12 +40,12 @@ public Lab1noSwing lab1 ;
 
         dialogPanel.setBackground(java.awt.Color.darkGray);
 
-        cancelButton.setBackground(new java.awt.Color(0, 230, 118));
+        cancelButton.setBackground(new java.awt.Color(180, 0, 26));
         cancelButton.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
-        cancelButton.setForeground(java.awt.Color.darkGray);
-        cancelButton.setText("Cancelar");
         cancelButton.setBorder(null);
         cancelButton.setBorderPainted(false);
+        cancelButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cancelButton.setLabel("CANCELAR");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -52,11 +54,11 @@ public Lab1noSwing lab1 ;
 
         connectButton.setBackground(new java.awt.Color(0, 230, 118));
         connectButton.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
-        connectButton.setForeground(java.awt.Color.darkGray);
-        connectButton.setText("Conectar");
+        connectButton.setText("CONECTAR");
         connectButton.setAutoscrolls(true);
         connectButton.setBorder(null);
         connectButton.setBorderPainted(false);
+        connectButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         connectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 connectButtonActionPerformed(evt);
@@ -74,26 +76,20 @@ public Lab1noSwing lab1 ;
         ipTextField.setBackground(java.awt.Color.darkGray);
         ipTextField.setBorder(null);
         ipTextField.setForeground(java.awt.Color.white);
-        ipTextField.setToolTipText("digite o pi");
+        ipTextField.setToolTipText("digite o endereço IP do servidor");
         ipTextField.setCaretColor(java.awt.Color.white);
-        ipTextField.setSelectedTextColor(java.awt.Color.white);
+        ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ipTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
-        ipTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ipTextFieldActionPerformed(evt);
-            }
-        });
 
         portTextField.setBackground(java.awt.Color.darkGray);
         portTextField.setBorder(null);
         portTextField.setForeground(java.awt.Color.white);
-        portTextField.setToolTipText("digite o pi");
+        portTextField.setToolTipText("digite a porta para a conexão com o servidor");
         portTextField.setCaretColor(java.awt.Color.white);
-        portTextField.setSelectedTextColor(java.awt.Color.white);
         portTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
-        portTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portTextFieldActionPerformed(evt);
+        portTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                portTextFieldKeyTyped(evt);
             }
         });
 
@@ -158,39 +154,35 @@ public Lab1noSwing lab1 ;
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
+        String portText = portTextField.getText().trim();
+        String serverIP = ipTextField.getText().trim();
+
+        if (portText.isEmpty() || serverIP.isEmpty()) return;
+        int serverPort = Integer.parseInt(portText);
+
+        this.setVisible(false);
+        System.out.println(serverIP + ":" + serverPort);
+
+        // TODO: enviar parâmetros coletados para o `parent`
+    }//GEN-LAST:event_connectButtonActionPerformed
+
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         System.exit(0);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-       
-        //não tá pegando como eu achei que pegaria
-        //lab1.setConnections(ipTextField.getText(), portTextField.getText());
-        //System.out.println("[IP] = "+ lab1.getUserIP()+" [Port] = " + lab1.getUserPort());
-        this.dispose();
-        
-    }//GEN-LAST:event_connectButtonActionPerformed
+    private void portTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portTextFieldKeyTyped
+        char enter = evt.getKeyChar();
+        if (!(Character.isDigit(enter))) evt.consume();
+    }//GEN-LAST:event_portTextFieldKeyTyped
 
- 
-    
-   
-    
-    private void ipTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ipTextFieldActionPerformed
 
-    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_portTextFieldActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -211,24 +203,22 @@ public Lab1noSwing lab1 ;
         //</editor-fold>
 
         /* Create and display the dialog */
-        
-        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 ConnectionDialog dialog = new ConnectionDialog(new javax.swing.JFrame(), true);
-          
+
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
                         System.exit(0);
                     }
                 });
-                
+
                 dialog.setVisible(true);
             }
         });
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelButton;

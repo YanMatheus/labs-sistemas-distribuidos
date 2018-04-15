@@ -1,48 +1,54 @@
-package lab1noswing;
-import javax.swing.*;
-import lab1noswing.MainWindow;
-import lab1noswing.ConnectionDialog;
-import java.util.ArrayList;
+package client.GUI;
+
+import client.connection.SocketController;
+
 /**
+ * Inicializa a janela principal e
+ * cordena a conexão do cliente com o servidor.
  *
  * @author Yan
+ * @author micael
  */
-public class Lab1noSwing {
-    static JPanel frame = new JPanel();
-    static JFrame jframe = new JFrame();
-    static JDialog connectionInput = new ConnectionDialog(jframe,true);
-    public String userIP, userPort;
-    public String dv_result;
-    public double[] inputDVList;
-    
-   
-    
-    public void setConnections(String IP, String Port){//método usado em ConnectionDialog para pegar os dados de entrada e passar para cá como string;
-        userIP = IP;
-        userPort = Port;
+public class ClientController {
+
+    SocketController cs = null;
+
+    public void setClientSocket(SocketController cs) {
+        this.cs = cs;
     }
-    
-    public String getUserIP(){
-        return userIP;
-    }
-     public String getUserPort(){
-        return userPort;
-    }
-     
-     public void setDVInput(String inputInicial){
-         
-                  
-     }
-    
+
+
     public static void main(String[] args) {
-      
-        MainWindow mainWindow = new MainWindow();
-        connectionInput.setLocationRelativeTo(null);
-        
-        
+
+        // estilo
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+
+        /*
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.setLocationRelativeTo(null);
+                mainWindow.setVisible(true);
+
+            }
+        });
+        */
+
+        ClientController cc = new ClientController();
+        MainWindow mainWindow = new MainWindow(cc);
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
-      
+
     }
-    
+
 }
