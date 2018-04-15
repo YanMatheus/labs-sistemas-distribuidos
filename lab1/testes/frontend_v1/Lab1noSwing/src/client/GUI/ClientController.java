@@ -17,6 +17,9 @@ public class ClientController {
         this.cs = cs;
     }
 
+    public void closeClientSocket() {
+        this.cs.closeSocket();
+    }
 
     public double calcularDesvioPadrao(String valoresStr) {
         // TODO: quebrar os valores em um array double
