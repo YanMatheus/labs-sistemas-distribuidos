@@ -3,6 +3,7 @@ package client;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.net.SocketException;
 import java.text.NumberFormat;
 import java.util.Locale;
 import javax.swing.*;
@@ -70,7 +71,13 @@ public class TelaPrincipal {
 
         int num3 = Integer.parseInt(strNum1);
         int num4 = Integer.parseInt(strNum2);
-        int soma = clientController.callRPCSomar(num3, num4);
+        int soma = 0;
+
+        try {
+          soma = clientController.callRPCSomar(num3, num4);
+        } catch (SocketException ex) {
+          janelaPrincipal.dispose();
+        }
 
         // Inserir resposta na primeira linha
         try {
@@ -98,12 +105,18 @@ public class TelaPrincipal {
 
         int num3 = Integer.parseInt(strNum1);
         int num4 = Integer.parseInt(strNum2);
-        int soma = clientController.callRPCMultiplicar(num3, num4);
+        int multiplicacao = 0;
+
+        try {
+          multiplicacao = clientController.callRPCMultiplicar(num3, num4);
+        } catch (SocketException ex) {
+          janelaPrincipal.dispose();
+        }
 
         // Inserir resposta na primeira linha
         try {
           areaResposta.getDocument().insertString(0,
-            String.format("> %s * %s = %d\n", strNum1, strNum2, soma), null);
+            String.format("> %s * %s = %d\n", strNum1, strNum2, multiplicacao), null);
         } catch (BadLocationException e) {
           e.printStackTrace();
         }
