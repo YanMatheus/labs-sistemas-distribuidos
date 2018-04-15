@@ -1,4 +1,4 @@
-package test;
+package jtree;
 
 import java.io.File;
 
