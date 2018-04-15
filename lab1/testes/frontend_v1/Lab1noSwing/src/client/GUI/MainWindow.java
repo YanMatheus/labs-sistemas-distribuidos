@@ -1,6 +1,8 @@
 package client.GUI;
 
 import client.connection.SocketController;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +15,14 @@ public class MainWindow extends javax.swing.JFrame {
 
     public MainWindow(ClientController cc) {
         initComponents();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                cc.closeClientSocket();
+            }
+        });
+
+
         this.cc = cc;
 
         ConnectionDialog connDialog = new ConnectionDialog(this, true);
