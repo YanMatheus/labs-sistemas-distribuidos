@@ -1,7 +1,6 @@
-## vide `src`
+## vide
 Dois programas (_client_ e _server_) para demonstrar uma RPC que computa a soma ou multiplicação de 2 números.
-O programa servidor não atende a mais de 1 cliente pois quando a conexão é aceita pelo primeiro,
-seu processo fica esperando requisições dele.
+O programa servidor atende a mais de 1 cliente, criando uma thread por conexão.
 Assim, devido à fila de sockets em espera, os demais clientes que estabelecerem uma conexão, não poderão enviar suas informações no canal de comunicação (_stream_) aberto até que o anterior feche a conexão.
 
 - a conexão é estabelecida através de **sockets stream** (sob o modelo TCP) a fim de manter um canal de comunicação confiável e segura entre os dois _hosts_ remotos;
@@ -15,12 +14,15 @@ Assim, devido à fila de sockets em espera, os demais clientes que estabelecerem
 ├── makefile
 └── src
     ├── client
-    │   ├── ClientSocketController.java   [main]
-    │   └── TelaPrincipal.java
-    └── server
-        ├── ConnectionProtocol.java
-        ├── InfoLog.java
-        └── ServerSocketController.java   [main]
+    │   ├── ClientSocketController.java
+    │   └── TelaPrincipal.java              [main]
+    ├── server
+    │   ├── ConnectionProtocol.java
+    │   ├── InfoLog.java
+    │   ├── RemoteProcedure.java
+    │   └── ServerSocketController.java     [main]
+    └── shared
+        └── RPCMetaData.java
 ```
 
 ## build & run
