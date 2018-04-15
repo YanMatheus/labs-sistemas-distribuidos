@@ -47,6 +47,7 @@ public class ClientController {
         MainWindow mainWindow = new MainWindow(cc);
         mainWindow.setLocationRelativeTo(null);
         mainWindow.setVisible(true);
+        mainWindow.setResizable(false);
 
     }
 
