@@ -60,7 +60,7 @@ public class ServerSocketController {
         RunnableRemoteProcedure remoteProcedure = mapRP.get(procedureId);
         if (remoteProcedure != null) {
           cp.sendRPCStatus(true);
-          remoteProcedure.run(rmd, cp.out);
+          remoteProcedure.run(rmd, cp.getOutputStream());
         } else {
           cp.sendRPCStatus(false);
           InfoLog.printToStderr("[error:%s] RP not found", "main");
