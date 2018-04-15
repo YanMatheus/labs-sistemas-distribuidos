@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import shared.RPCMetaData;
 
 /**
  * Representa uma conexão do client com o server.
@@ -19,6 +22,35 @@ public class SocketController {
     private Socket cs;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
+
+    public Double callRPDesvioPadrao(List<Double> valores) throws IOException {
+        // Definição dos argumentos para a função remota `DesvioPadrao`
+        ArrayList<Object> RPArgs = new ArrayList<>(1);
+        RPArgs.add(0, valores);
+
+        // Construção do objeto que será recebido pelo servidor
+        RPCMetaData rmd = new RPCMetaData(RPCMetaData.ID_RP_DESVIOPADRAO, RPArgs);
+
+        // [send] Escrita do objeto que representa os meta-dados da RP
+        this.out.writeObject(rmd);
+        System.out.printf("[send] called desvio_padrao(...{%d})\n", ((ArrayList)RPArgs.get(0)).size());
+
+        // [receive] Leitura da confirmação do server sobre se a RP foi encontrada
+        Boolean found = this.in.readBoolean();
+        System.out.printf("[receive] RPC status '%s'\n", found ? "FOUND" : "NOT FOUND");
+
+        if (found) {
+            System.out.printf("[waiting] server RPC response\n");
+            // [receive] Leitura do resultado obtido da chamada da RP
+            double result = this.in.readDouble();
+            System.out.printf("[receive] RPC result: %f\n", result);
+            return result;
+        }
+
+        return null;
+    }
+
 
 
     /**

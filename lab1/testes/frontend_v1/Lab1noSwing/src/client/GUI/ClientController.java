@@ -1,6 +1,10 @@
 package client.GUI;
 
 import client.connection.SocketController;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Inicializa a janela principal e
@@ -11,7 +15,7 @@ import client.connection.SocketController;
  */
 public class ClientController {
 
-    SocketController cs = null;
+    private SocketController cs = null;
 
     public void setClientSocket(SocketController cs) {
         this.cs = cs;
@@ -21,10 +25,26 @@ public class ClientController {
         this.cs.closeSocket();
     }
 
-    public double calcularDesvioPadrao(String valoresStr) {
-        // TODO: quebrar os valores em um array double
+    /**
+     *
+     * @param valoresStr
+     * @return
+     */
+    public Double calcularDesvioPadrao(String valoresStr) {
+        if (this.cs == null) return null;
 
-        return 0f;
+        try {
+
+            List<Double> valores = Arrays.stream( valoresStr.split(" ") )
+                                         .map(Double::parseDouble)
+                                         .collect(Collectors.toList());
+
+            return this.cs.callRPDesvioPadrao(valores);
+
+        } catch (NumberFormatException | IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
 
