@@ -35,7 +35,7 @@ public class MainWindow extends javax.swing.JFrame {
                 cc.setClientSocket(cs);
                 break;
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(null,
                     "Não foi possível conectar",
                     "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
                 connDialog.setVisible(true);
@@ -55,7 +55,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         tabs_JP = new javax.swing.JPanel();
-        calculateButton = new javax.swing.JButton();
+        btnCalcularDesvio = new javax.swing.JButton();
         input_FTF = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         clearButton = new javax.swing.JButton();
@@ -77,14 +77,14 @@ public class MainWindow extends javax.swing.JFrame {
 
         tabs_JP.setBackground(java.awt.Color.darkGray);
 
-        calculateButton.setBackground(new java.awt.Color(0, 230, 118));
-        calculateButton.setFont(new java.awt.Font("DejaVu Sans", 0, 18)); // NOI18N
-        calculateButton.setText("Calcular");
-        calculateButton.setBorder(null);
-        calculateButton.setNextFocusableComponent(jTabbedPane1);
-        calculateButton.addActionListener(new java.awt.event.ActionListener() {
+        btnCalcularDesvio.setBackground(new java.awt.Color(0, 230, 118));
+        btnCalcularDesvio.setFont(new java.awt.Font("DejaVu Sans", 0, 18)); // NOI18N
+        btnCalcularDesvio.setText("Calcular");
+        btnCalcularDesvio.setBorder(null);
+        btnCalcularDesvio.setNextFocusableComponent(jTabbedPane1);
+        btnCalcularDesvio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                calculateButtonActionPerformed(evt);
+                btnCalcularDesvioActionPerformed(evt);
             }
         });
 
@@ -102,7 +102,7 @@ public class MainWindow extends javax.swing.JFrame {
         clearButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/GUI/drawables/bin.png"))); // NOI18N
         clearButton.setBorderPainted(false);
         clearButton.setIconTextGap(1);
-        clearButton.setNextFocusableComponent(calculateButton);
+        clearButton.setNextFocusableComponent(btnCalcularDesvio);
         clearButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 clearButtonActionPerformed(evt);
@@ -138,7 +138,7 @@ public class MainWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(calculateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)))
+                        .addComponent(btnCalcularDesvio, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         tabs_JPLayout.setVerticalGroup(
@@ -151,7 +151,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabs_JPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(calculateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
+                    .addComponent(btnCalcularDesvio, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
                     .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(input_FTF))
                 .addGap(23, 23, 23))
@@ -197,16 +197,21 @@ public class MainWindow extends javax.swing.JFrame {
         input_FTF.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
 
-    private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
+    private void btnCalcularDesvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularDesvioActionPerformed
         if ( input_FTF.getText().isEmpty() ) return;
-        // TODO: invocar o procedimento remoto do cálculo do Desvio Padrão
-        double x = this.cc.calcularDesvioPadrao( input_FTF.getText() );
-        historyPanel.setText(">> " + x); // TODO: alterar aqui
-    }//GEN-LAST:event_calculateButtonActionPerformed
+
+        btnCalcularDesvio.setEnabled(false);
+
+        Double resultado = this.cc.calcularDesvioPadrao( input_FTF.getText() );
+        if (resultado != null)
+            historyPanel.setText(">> " + resultado); // TODO: alterar aqui
+
+        btnCalcularDesvio.setEnabled(true);
+    }//GEN-LAST:event_btnCalcularDesvioActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton calculateButton;
+    private javax.swing.JButton btnCalcularDesvio;
     private javax.swing.JButton clearButton;
     private javax.swing.JTree dirTree;
     private javax.swing.JTextPane historyPanel;
