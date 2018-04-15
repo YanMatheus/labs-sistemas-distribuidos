@@ -6,29 +6,39 @@ import java.io.*;
 import java.net.*;
 import java.util.logging.*;
 import java.util.ArrayList;
-
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  *
  */
-public class ConnectionProtocol {
+public class ConnectionProtocol implements Runnable {
 
   private Socket socket;
   private ObjectInputStream in;
   private ObjectOutputStream out;
+  private Map<Short, RunnableRemoteProcedure> mapRP;
 
   /**
    * Inicializa uma conexão com um um socket
    * que será tratado como <em>client</em>.
    * @param targetSocket
    */
-  public ConnectionProtocol(Socket targetSocket) {
+  public ConnectionProtocol(Socket targetSocket, Map<Short, RunnableRemoteProcedure> mapRP) {
     this.socket = targetSocket;
+    this.mapRP = mapRP;
 
     try {
 
       this.out = new ObjectOutputStream( socket.getOutputStream() );
       this.in = new ObjectInputStream( socket.getInputStream() );
+
+      try {
+        (new Thread(this)).start(); // chama o método `run`
+      } catch (IllegalThreadStateException ex) {
+        Logger.getLogger(ConnectionProtocol.class.getName() )
+              .log(Level.SEVERE, "thread was already started", ex);
+      }
 
     } catch (IOException ex) {
       Logger.getLogger(ConnectionProtocol.class.getName() )
@@ -37,10 +47,40 @@ public class ConnectionProtocol {
   }
 
   /**
-   * @return O fluxo de dados de saída aberto (no construtor).
+   *
    */
-  ObjectOutputStream getOutputStream() {
-    return this.out;
+  public void run() {
+    do {
+
+      RPCMetaData rmd = null;
+      short procedureId = -1;
+
+      try {
+        rmd = receiveRPCMetaData();
+        procedureId = rmd.getId();
+      } catch (ClassNotFoundException ex) {
+        Logger.getLogger(ConnectionProtocol.class.getName() )
+              .log(Level.SEVERE, "Class of a serialized object cannot be found", ex);
+      } catch (IOException ex) { break; } // cliente fechou a conexão
+
+      RunnableRemoteProcedure remoteProcedure = mapRP.get(procedureId);
+      if (remoteProcedure != null) {
+        this.sendRPCStatus(true);
+        try {
+          remoteProcedure.run(rmd, out);
+        } catch (IOException ex) {
+          Logger.getLogger(ConnectionProtocol.class.getName() )
+                .log(Level.WARNING, "Erro ao executar método remoto", ex);
+        }
+      } else {
+        this.sendRPCStatus(false);
+        Logger.getLogger(ConnectionProtocol.class.getName() )
+              .log(Level.WARNING, "RP not found");
+      }
+
+    } while (true);
+
+    this.close();
   }
 
   /**
