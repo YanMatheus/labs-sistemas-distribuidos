@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  *
  */
-public class ServerSocketController {
+public class MultiThreadedServer {
 
   /**
    * Define todas os procedimentos remotos
@@ -41,7 +41,7 @@ public class ServerSocketController {
     try {
       ss = new ServerSocket(ssPort);
     } catch (IOException ex) {
-      Logger.getLogger(ServerSocketController.class.getName())
+      Logger.getLogger(MultiThreadedServer.class.getName())
             .log(Level.SEVERE, "Erro socket bind", ex);
       System.exit(1);
     }
