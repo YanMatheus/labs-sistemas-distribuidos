@@ -29,7 +29,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         dialogPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
-        connectButton = new javax.swing.JButton();
+        btnConectar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
@@ -45,7 +45,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         cancelButton.setBackground(new java.awt.Color(180, 0, 26));
         cancelButton.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
-        cancelButton.setBorder(null);
         cancelButton.setBorderPainted(false);
         cancelButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cancelButton.setLabel("CANCELAR");
@@ -55,16 +54,15 @@ public class ConnectionDialog extends javax.swing.JDialog {
             }
         });
 
-        connectButton.setBackground(new java.awt.Color(0, 230, 118));
-        connectButton.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
-        connectButton.setText("CONECTAR");
-        connectButton.setAutoscrolls(true);
-        connectButton.setBorder(null);
-        connectButton.setBorderPainted(false);
-        connectButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        connectButton.addActionListener(new java.awt.event.ActionListener() {
+        btnConectar.setBackground(new java.awt.Color(0, 230, 118));
+        btnConectar.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
+        btnConectar.setText("CONECTAR");
+        btnConectar.setAutoscrolls(true);
+        btnConectar.setBorderPainted(false);
+        btnConectar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnConectar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                connectButtonActionPerformed(evt);
+                btnConectarActionPerformed(evt);
             }
         });
 
@@ -77,16 +75,19 @@ public class ConnectionDialog extends javax.swing.JDialog {
         jLabel2.setText("Porta:");
 
         ipTextField.setBackground(java.awt.Color.darkGray);
-        ipTextField.setBorder(null);
         ipTextField.setForeground(java.awt.Color.white);
         ipTextField.setText("localhost");
         ipTextField.setToolTipText("digite o endereço IP do servidor");
         ipTextField.setCaretColor(java.awt.Color.white);
         ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ipTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
+        ipTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                ipTextFieldKeyReleased(evt);
+            }
+        });
 
         portTextField.setBackground(java.awt.Color.darkGray);
-        portTextField.setBorder(null);
         portTextField.setForeground(java.awt.Color.white);
         portTextField.setText("4444");
         portTextField.setToolTipText("digite a porta para a conexão com o servidor");
@@ -95,6 +96,9 @@ public class ConnectionDialog extends javax.swing.JDialog {
         portTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 portTextFieldKeyTyped(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                portTextFieldKeyReleased(evt);
             }
         });
 
@@ -108,7 +112,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
                     .addGroup(dialogPanelLayout.createSequentialGroup()
                         .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                        .addComponent(connectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, dialogPanelLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -140,7 +144,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(52, 52, 52)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(connectButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnConectar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29))
         );
@@ -159,17 +163,12 @@ public class ConnectionDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void connectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectButtonActionPerformed
-        String portText = portTextField.getText().trim();
-        String serverIP = ipTextField.getText().trim();
-
-        if (portText.isEmpty() || serverIP.isEmpty()) return;
-
-        this.ip   = serverIP;
-        this.port = Integer.parseInt(portText);
+    private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
+        this.ip   = ipTextField.getText().trim();
+        this.port = Integer.parseInt( portTextField.getText().trim() );
 
         this.setVisible(false);
-    }//GEN-LAST:event_connectButtonActionPerformed
+    }//GEN-LAST:event_btnConectarActionPerformed
 
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
         System.exit(0);
@@ -180,6 +179,18 @@ public class ConnectionDialog extends javax.swing.JDialog {
         if (!(Character.isDigit(enter))
             || portTextField.getText().trim().length() >= 5) evt.consume();
     }//GEN-LAST:event_portTextFieldKeyTyped
+
+    private void ipTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ipTextFieldKeyReleased
+        String portText = portTextField.getText().trim();
+        String serverIP = ipTextField.getText().trim();
+        btnConectar.setEnabled( !portText.isEmpty() && !serverIP.isEmpty() );
+    }//GEN-LAST:event_ipTextFieldKeyReleased
+
+    private void portTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portTextFieldKeyReleased
+        String portText = portTextField.getText().trim();
+        String serverIP = ipTextField.getText().trim();
+        btnConectar.setEnabled( !portText.isEmpty() && !serverIP.isEmpty() );
+    }//GEN-LAST:event_portTextFieldKeyReleased
 
 
 
@@ -226,8 +237,8 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton btnConectar;
     private javax.swing.JButton cancelButton;
-    public javax.swing.JButton connectButton;
     private javax.swing.JPanel dialogPanel;
     private javax.swing.JFormattedTextField ipTextField;
     private javax.swing.JLabel jLabel1;
