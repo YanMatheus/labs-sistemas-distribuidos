@@ -176,8 +176,8 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
     private void portTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portTextFieldKeyTyped
         char enter = evt.getKeyChar();
-        if (!(Character.isDigit(enter))
-            || portTextField.getText().trim().length() >= 5) evt.consume();
+        if ( !Character.isDigit(enter)
+          || portTextField.getText().trim().length() >= 5) evt.consume();
     }//GEN-LAST:event_portTextFieldKeyTyped
 
     private void ipTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ipTextFieldKeyReleased
