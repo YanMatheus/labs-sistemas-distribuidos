@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -17,6 +18,7 @@ import javax.swing.tree.TreePath;
  */
 public class MainWindow extends javax.swing.JFrame {
     ClientController cc = null;
+    long historyLine = 0;
 
     public MainWindow(ClientController cc) {
         initComponents();
@@ -325,8 +327,14 @@ public class MainWindow extends javax.swing.JFrame {
         btnCalcularDesvio.setEnabled(false);
 
         Double resultado = this.cc.calcularDesvioPadrao( tfValoresDesvioPadrao.getText() );
-        if (resultado != null)
-            historyPanel.setText(">> " + resultado); // TODO: alterar aqui
+        if (resultado != null) {
+            try {
+                historyPanel.getDocument().insertString(0,
+                    String.format("[%d]= %f\n", ++historyLine, resultado), null);
+            } catch (BadLocationException ex) {
+                ex.printStackTrace();
+            }
+        }
 
         btnCalcularDesvio.setEnabled(true);
     }//GEN-LAST:event_btnCalcularDesvioActionPerformed
@@ -361,26 +369,26 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSelecionarOrigemKeyPressed
 
     private String toPath(String s) {
-        
+
         String str;
         String path = File.separator;
-        
+
         str = s.replaceAll("[\\[\\]]","").replaceAll("\\s+", "");
         String termo[] = str.split(",");
-        
+
         for (int i = 0; i < termo.length; ++i)
             path += termo[i] + File.separator;
-        
+
         return path;
     }
-    
+
     private void atuarSobreDiretorioSelecionado(TreePath tp) {
         if (tp == null) return;
         TreeNode node = (TreeNode) tp.getLastPathComponent();
         if (!node.isLeaf())
             tfOrigem.setText(toPath(""+tp));
     }
-    
+
     private void btnSelecionarOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemActionPerformed
         // TODO add your handling code here:
         atuarSobreDiretorioSelecionado(dirTree.getSelectionPath());
@@ -389,14 +397,14 @@ public class MainWindow extends javax.swing.JFrame {
     private void btnSelecionarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarDestinoActionPerformed
         // TODO add your handling code here:
         JFileChooser chooser;
-        
+
         chooser = new JFileChooser();
         chooser.setCurrentDirectory(new java.io.File("."));
         chooser.setDialogTitle("Diretório de Destino");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        
+
         chooser.setAcceptAllFileFilterUsed(false);
-        
+
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             tfDestino.setText("" + chooser.getSelectedFile());
         } else {
