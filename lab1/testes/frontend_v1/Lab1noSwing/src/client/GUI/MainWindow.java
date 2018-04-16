@@ -3,8 +3,11 @@ package client.GUI;
 import client.connection.SocketController;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -357,22 +360,30 @@ public class MainWindow extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSelecionarOrigemKeyPressed
 
+    private String toPath(String s) {
+        
+        String str;
+        String path = File.separator;
+        
+        str = s.replaceAll("[\\[\\]]","").replaceAll("\\s+", "");
+        String termo[] = str.split(",");
+        
+        for (int i = 0; i < termo.length; ++i)
+            path += termo[i] + File.separator;
+        
+        return path;
+    }
+    
+    private void atuarSobreDiretorioSelecionado(TreePath tp) {
+        if (tp == null) return;
+        TreeNode node = (TreeNode) tp.getLastPathComponent();
+        if (!node.isLeaf())
+            tfOrigem.setText(toPath(""+tp));
+    }
+    
     private void btnSelecionarOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemActionPerformed
         // TODO add your handling code here:
-        JFileChooser chooser;
-        
-        chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new java.io.File("."));
-        chooser.setDialogTitle("Diretório de Origem");
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        
-        chooser.setAcceptAllFileFilterUsed(false);
-        
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            tfOrigem.setText("" + chooser.getSelectedFile());
-        } else {
-            tfOrigem.setText("");
-        }
+        atuarSobreDiretorioSelecionado(dirTree.getSelectionPath());
     }//GEN-LAST:event_btnSelecionarOrigemActionPerformed
 
     private void btnSelecionarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarDestinoActionPerformed
