@@ -58,7 +58,8 @@ public class ClientController {
 
         try {
 
-            return this.cs.callRPBaixarDiretorio(dirRemoto, dirDestino);
+            return this.cs.callRPBaixarDiretorio(dirRemoto,
+              dirDestino, this.cs.getRemoteSocketAddressString());
 
         } catch (IOException ex) {
             ex.printStackTrace();

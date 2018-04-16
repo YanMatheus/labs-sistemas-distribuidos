@@ -21,6 +21,7 @@ public class MultiThreadedServer {
      */
     public static void setRemoteProcedures(Map<Short, RunnableRemoteProcedure> m) {
         m.put(RPCMetaData.ID_RP_DESVIOPADRAO, RemoteProcedure::doDesvioPadrao);
+        m.put(RPCMetaData.ID_RP_BAIXARDIRETORIO, RemoteProcedure::doBaixarDiretorio);
     }
 
     public static void main(String[] args) {

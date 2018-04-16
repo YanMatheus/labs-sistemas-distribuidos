@@ -80,10 +80,20 @@ public class MainWindow extends javax.swing.JFrame {
         return path;
     }
 
+    private void enableBtnBaixar() {
+      btnBaixar.setEnabled(
+          !tfOrigem.getText().trim().isEmpty()
+          && !tfDestino.getText().trim().isEmpty()
+      );
+    }
+
     private void atuarSobreDiretorioSelecionado(TreePath tp) {
         if (tp == null) return;
         TreeNode node = (TreeNode) tp.getLastPathComponent();
-        if ( !node.isLeaf() ) tfOrigem.setText( toPath(tp.toString()) );
+        if ( !node.isLeaf() ) {
+            tfOrigem.setText( toPath(tp.toString()) );
+            enableBtnBaixar();
+        }
     }
 
 
@@ -410,11 +420,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         chooser.setAcceptAllFileFilterUsed(false);
 
-        tfDestino.setText(
-            (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-              ? chooser.getSelectedFile().toString()
-              : ""
-        );
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            tfDestino.setText( chooser.getSelectedFile().toString() );
+            enableBtnBaixar();
+        }
     }//GEN-LAST:event_btnSelecionarDestinoActionPerformed
 
 

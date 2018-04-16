@@ -43,9 +43,57 @@ interface RemoteProcedure {
         // [send] Escrever o resultado do procedimento `desvioPadrao`
         out.writeDouble(result);
         out.flush();
-        InfoLog.printToStdout("sended %s '%f' to client", "Double", result);
+        InfoLog.printToStdout("sent %s '%f' to client", "Double", result);
     }
 
+    /**
+     * Realiza as ações para o
+     * procedimento remoto `DesvioPadrao`.
+     * @throws EOFException - if this input stream reaches the end before reading four bytes.
+     * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
+     */
+    static void doBaixarDiretorio(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException {
+        ArrayList<Object> args = rmd.getArgs();
+
+        // TODO:   alterar para rootDir.getParent() |/
+        String dirOrigem = "/home/icomp/Área de Trabalho" + ((String) args.get(0));
+        InfoLog.printToStdout("client called RPC baixar_diretorio(...{%d})", 1);
+
+        // Realizar a operação do procedimento `baixarDiretorio`
+        final String dirOrigemZip = dirOrigem.substring(0, dirOrigem.length()-1) + ".zip";
+
+        try {
+            Zipper.zipFile(dirOrigem, dirOrigemZip);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            out.writeBoolean(false);
+            out.flush();
+            return;
+        }
+
+        try {
+
+            File fileSent = new File(dirOrigemZip);
+            byte[] buffer = new byte[ (int)fileSent.length() ];
+            FileInputStream fis = new FileInputStream(fileSent);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+
+            bis.read(buffer, 0, buffer.length);
+
+            // [send] Escrever o tamanho do arquivo a ser enviado
+            out.writeLong( fileSent.length() );
+            // [send] Escrever o resultado do procedimento `desvioPadrao`
+            out.write(buffer, 0, buffer.length);
+            out.flush();
+            InfoLog.printToStdout("sent '%s' (%d bytes) to client", fileSent.getName(), fileSent.length());
+
+            bis.close();
+            fileSent.delete();
+
+      } catch (IOException ex) {
+            ex.printStackTrace();
+      }
+    }
 
 
 }

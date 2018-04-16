@@ -54,25 +54,28 @@ public class SocketController {
         return null;
     }
 
-    public Boolean callRPBaixarDiretorio(String dirRemoto, String dirDestino) throws IOException {
-        String caminhoArquivoBaixado = dirDestino + "joao_byte.zip";
+    public Boolean callRPBaixarDiretorio(String dirRemoto, String dirDestino, String serverHost) throws IOException {
+        String caminhoArquivoBaixado = dirDestino + File.separator + serverHost.replaceAll("[.:/]", "") + ".zip";
 
         // Definição dos argumentos para a função remota `DesvioPadrao`
-        ArrayList<Object> RPArgs = new ArrayList<>(2);
+        ArrayList<Object> RPArgs = new ArrayList<>(1);
         RPArgs.add(0, dirRemoto);
-        RPArgs.add(1, dirDestino);
 
         // Construção do objeto que será recebido pelo servidor
         RPCMetaData rmd = new RPCMetaData(RPCMetaData.ID_RP_BAIXARDIRETORIO, RPArgs);
 
         // [send] Escrita do objeto que representa os meta-dados da RP
         this.out.writeObject(rmd);
-        System.out.printf("[send] called baixar_diretorio(...{%d})\n", ((ArrayList)RPArgs.get(0)).size());
+        System.out.printf("[send] called baixar_diretorio(...{%d})\n", RPArgs.size());
 
         // [receive] Leitura da confirmação do server sobre se a RP foi encontrada
         Boolean found = this.in.readBoolean();
 
         if (found) {
+            // [receive] Leitura da confirmação do server sobre se o diretório foi encontrado
+            long fileLength = this.in.readLong();
+            if (fileLength <= 0) return false;
+
             System.out.printf("[waiting] server RPC response\n");
             // [receive] Leitura do resultado obtido da chamada da RP
             int currentByte = 0;
@@ -83,9 +86,10 @@ public class SocketController {
             int bytesRead = this.in.read(buffer, 0, buffer.length);
             currentByte = bytesRead;
 
-            while (bytesRead > -1) {
+            while (currentByte < fileLength) {
               bytesRead = this.in.read(buffer, currentByte, (buffer.length - currentByte));
               if (bytesRead >= 0) currentByte += bytesRead;
+              else break;
             }
 
             bos.write(buffer, 0, currentByte);
@@ -126,6 +130,14 @@ public class SocketController {
 
     public File getRootDir() {
       return this.rootDir;
+    }
+
+    /**
+     *
+     * @return IP e Porta do servidor.
+     */
+    public String getRemoteSocketAddressString() {
+      return this.cs.getRemoteSocketAddress().toString();
     }
 
     /**
