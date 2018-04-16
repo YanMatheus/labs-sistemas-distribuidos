@@ -21,7 +21,7 @@ public class RPCMetaData implements Serializable {
 
     // Identificadores dos procedimentos remotos disponíveis:
     public static final short ID_RP_DESVIOPADRAO = 0x1;
-    public static final short ID_RP_MYCOPY= 0x2;
+    public static final short ID_RP_BAIXARDIRETORIO = 0x2;
 
     // Identificador do procedimento remoto requisitado
     private short id;

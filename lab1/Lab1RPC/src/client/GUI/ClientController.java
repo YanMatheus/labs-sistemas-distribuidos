@@ -47,6 +47,25 @@ public class ClientController {
         }
     }
 
+    /**
+     *
+     * @param dirRemoto
+     * @param dirDestino
+     * @return
+     */
+    public Boolean baixarDiretorio(String dirRemoto, String dirDestino) {
+        if (this.cs == null) return false;
+
+        try {
+
+            return this.cs.callRPBaixarDiretorio(dirRemoto, dirDestino);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 
     public static void main(String[] args) {
 

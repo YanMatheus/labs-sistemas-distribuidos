@@ -239,6 +239,11 @@ public class MainWindow extends javax.swing.JFrame {
         btnBaixar.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnBaixar.setText("Baixar");
         btnBaixar.setEnabled(false);
+        btnBaixar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBaixarActionPerformed(evt);
+            }
+        });
 
         lbOrigem.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lbOrigem.setForeground(java.awt.Color.lightGray);
@@ -320,6 +325,28 @@ public class MainWindow extends javax.swing.JFrame {
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         tfValoresDesvioPadrao.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
+
+    private void btnBaixarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBaixarActionPerformed
+        btnBaixar.setEnabled(false);
+
+        Boolean baixou = this.cc.baixarDiretorio(
+            tfOrigem.getText(),
+            tfDestino.getText()
+        );
+
+        if (baixou) {
+          JOptionPane.showMessageDialog(null,
+            "Diretório baixado com sucesso!",
+            "Feito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null,
+              "Não foi possível baixar o diretório selecionado",
+              "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+        btnBaixar.setEnabled(true);
+    }//GEN-LAST:event_btnBaixarActionPerformed
 
     private void btnCalcularDesvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularDesvioActionPerformed
         btnCalcularDesvio.setEnabled(false);

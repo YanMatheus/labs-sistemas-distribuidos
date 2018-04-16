@@ -1,5 +1,7 @@
 package client.connection;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +19,7 @@ import shared.RPCMetaData;
  * entre dois hosts remotos.
  *
  * @author micael
+ * @author Victor
  */
 public class SocketController {
 
@@ -51,6 +54,52 @@ public class SocketController {
         return null;
     }
 
+    public Boolean callRPBaixarDiretorio(String dirRemoto, String dirDestino) throws IOException {
+        String caminhoArquivoBaixado = dirDestino + "joao_byte.zip";
+
+        // Definição dos argumentos para a função remota `DesvioPadrao`
+        ArrayList<Object> RPArgs = new ArrayList<>(2);
+        RPArgs.add(0, dirRemoto);
+        RPArgs.add(1, dirDestino);
+
+        // Construção do objeto que será recebido pelo servidor
+        RPCMetaData rmd = new RPCMetaData(RPCMetaData.ID_RP_BAIXARDIRETORIO, RPArgs);
+
+        // [send] Escrita do objeto que representa os meta-dados da RP
+        this.out.writeObject(rmd);
+        System.out.printf("[send] called baixar_diretorio(...{%d})\n", ((ArrayList)RPArgs.get(0)).size());
+
+        // [receive] Leitura da confirmação do server sobre se a RP foi encontrada
+        Boolean found = this.in.readBoolean();
+
+        if (found) {
+            System.out.printf("[waiting] server RPC response\n");
+            // [receive] Leitura do resultado obtido da chamada da RP
+            int currentByte = 0;
+            byte[] buffer = new byte[6022386];
+            FileOutputStream fos = new FileOutputStream(caminhoArquivoBaixado);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+
+            int bytesRead = this.in.read(buffer, 0, buffer.length);
+            currentByte = bytesRead;
+
+            while (bytesRead > -1) {
+              bytesRead = this.in.read(buffer, currentByte, (buffer.length - currentByte));
+              if (bytesRead >= 0) currentByte += bytesRead;
+            }
+
+            bos.write(buffer, 0, currentByte);
+            bos.flush();
+
+            fos.close();
+            bos.close();
+            System.out.printf("[receive] file '%s' (%d bytes) downloaded\n", caminhoArquivoBaixado, currentByte);
+
+            return true;
+        }
+
+        return null;
+    }
 
 
     /**
