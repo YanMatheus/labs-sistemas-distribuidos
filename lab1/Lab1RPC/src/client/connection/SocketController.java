@@ -3,6 +3,7 @@ package client.connection;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.File;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class SocketController {
     private Socket cs;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-
+    private File rootDir;
 
     public Double callRPDesvioPadrao(List<Double> valores) throws IOException {
         // Definição dos argumentos para a função remota `DesvioPadrao`
@@ -58,7 +59,7 @@ public class SocketController {
      * @param serverPort - the port number which server host is listening.
      * @throws IOException
      */
-    public SocketController(String serverHost, int serverPort) throws IOException {
+    public SocketController(String serverHost, int serverPort) throws IOException, ClassNotFoundException {
         // Conectar com um processo remoto
         cs = new Socket(serverHost, serverPort);
         System.out.printf("Socket cliente criado com endereço '%s' conectado com socket '%s'\n",
@@ -67,6 +68,15 @@ public class SocketController {
         // Abrir um canal para a troca de mensagens
         in = new ObjectInputStream( cs.getInputStream() );
         out = new ObjectOutputStream( cs.getOutputStream() );
+
+        System.out.printf("[waiting] server root dir\n");
+        // [receive] Leitura da representação a árvore de diretórios do server
+        rootDir = (File) in.readObject();
+        System.out.printf("[receive] root name: %s\n", rootDir.getName());
+    }
+
+    public File getRootDir() {
+      return this.rootDir;
     }
 
     /**

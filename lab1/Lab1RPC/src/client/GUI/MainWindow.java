@@ -7,6 +7,8 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
@@ -26,6 +28,7 @@ public class MainWindow extends javax.swing.JFrame {
             @Override
             public void windowClosing(WindowEvent we) {
                 cc.closeClientSocket();
+                System.exit(0);
             }
         });
 
@@ -40,6 +43,7 @@ public class MainWindow extends javax.swing.JFrame {
             try {
                 SocketController cs = new SocketController(connDialog.ip, connDialog.port);
                 cc.setClientSocket(cs);
+                buildJTree( cs.getRootDir() );
                 break;
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,
@@ -54,6 +58,33 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
 
+    private void buildJTree(File fileRoot) {
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode( new FileNode(fileRoot) );
+        // this.dirTree = new javax.swing.JTree( new DefaultTreeModel(root) );
+        this.dirTree.setShowsRootHandles(true);
+        this.dirTree.setModel( new DefaultTreeModel(root) );
+        this.jScrollPane1.setViewportView(dirTree);
+
+        ChildNode ccn = new ChildNode(fileRoot, root);
+        (new Thread(ccn)).start();
+    }
+
+    private String toPath(String s) {
+        String str;
+        String path = File.separator;
+
+        str = s.replaceAll("[\\[\\]]","").replaceAll("\\s+", "");
+        String termo[] = str.split(",");
+
+        for (int i = 0; i < termo.length; ++i) path += termo[i] + File.separator;
+        return path;
+    }
+
+    private void atuarSobreDiretorioSelecionado(TreePath tp) {
+        if (tp == null) return;
+        TreeNode node = (TreeNode) tp.getLastPathComponent();
+        if ( !node.isLeaf() ) tfOrigem.setText( toPath(tp.toString()) );
+    }
 
 
     @SuppressWarnings("unchecked")
@@ -185,40 +216,12 @@ public class MainWindow extends javax.swing.JFrame {
 
         jPanel3.setBackground(java.awt.Color.darkGray);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("server@localhost:4444");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("colors");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("blue");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("violet");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("red");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("yellow");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("sports");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("basketball");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("soccer");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("football");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hockey");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("food");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("hot dogs");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("pizza");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("ravioli");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("bananas");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        dirTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        dirTree.setToolTipText("");
-        jScrollPane1.setViewportView(dirTree);
+        dirTree.setToolTipText("Selecione um diretório para copiar");
+        dirTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dirTreeMousePressed(evt);
+            }
+        });
 
         tfOrigem.setName("tf_origem"); // NOI18N
         tfOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -249,11 +252,6 @@ public class MainWindow extends javax.swing.JFrame {
         btnSelecionarOrigem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSelecionarOrigemActionPerformed(evt);
-            }
-        });
-        btnSelecionarOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                btnSelecionarOrigemKeyPressed(evt);
             }
         });
 
@@ -350,52 +348,32 @@ public class MainWindow extends javax.swing.JFrame {
           && enter != '.' ) evt.consume();
     }//GEN-LAST:event_tfValoresDesvioPadraoKeyTyped
 
+    private void dirTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dirTreeMousePressed
+        int selRow = dirTree.getRowForLocation(evt.getX(), evt.getY());
+        TreePath selPath = dirTree.getPathForLocation(evt.getX(), evt.getY());
+
+        if ((selRow >= 0) && (evt.getClickCount() == 1)) {
+            atuarSobreDiretorioSelecionado(selPath);
+        }
+    }//GEN-LAST:event_dirTreeMousePressed
+
     private void tfOrigemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfOrigemKeyReleased
-        // TODO add your handling code here:
         String origemText  = tfOrigem.getText().trim();
         String destinoText = tfDestino.getText().trim();
         btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
     }//GEN-LAST:event_tfOrigemKeyReleased
 
     private void tfDestinoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfDestinoKeyReleased
-        // TODO add your handling code here:
         String origemText  = tfOrigem.getText().trim();
         String destinoText = tfDestino.getText().trim();
         btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
     }//GEN-LAST:event_tfDestinoKeyReleased
 
-    private void btnSelecionarOrigemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemKeyPressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSelecionarOrigemKeyPressed
-
-    private String toPath(String s) {
-
-        String str;
-        String path = File.separator;
-
-        str = s.replaceAll("[\\[\\]]","").replaceAll("\\s+", "");
-        String termo[] = str.split(",");
-
-        for (int i = 0; i < termo.length; ++i)
-            path += termo[i] + File.separator;
-
-        return path;
-    }
-
-    private void atuarSobreDiretorioSelecionado(TreePath tp) {
-        if (tp == null) return;
-        TreeNode node = (TreeNode) tp.getLastPathComponent();
-        if (!node.isLeaf())
-            tfOrigem.setText(toPath(""+tp));
-    }
-
     private void btnSelecionarOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemActionPerformed
-        // TODO add your handling code here:
-        atuarSobreDiretorioSelecionado(dirTree.getSelectionPath());
+        atuarSobreDiretorioSelecionado( dirTree.getSelectionPath() );
     }//GEN-LAST:event_btnSelecionarOrigemActionPerformed
 
     private void btnSelecionarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarDestinoActionPerformed
-        // TODO add your handling code here:
         JFileChooser chooser;
 
         chooser = new JFileChooser();
@@ -405,11 +383,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         chooser.setAcceptAllFileFilterUsed(false);
 
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            tfDestino.setText("" + chooser.getSelectedFile());
-        } else {
-            tfDestino.setText("");
-        }
+        tfDestino.setText(
+            (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+              ? chooser.getSelectedFile().toString()
+              : ""
+        );
     }//GEN-LAST:event_btnSelecionarDestinoActionPerformed
 
 

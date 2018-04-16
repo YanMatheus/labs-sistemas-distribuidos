@@ -25,13 +25,13 @@ public class MultiThreadedServer {
 
     public static void main(String[] args) {
         // Porta para o socket deve estar entre 1024 a 65535
-        int ssPort = (args.length == 1)
-                ? Integer.parseInt(args[0])
-                : 4444;
+        int ssPort = Integer.parseInt(args[0]);
+        final String PATH_TO_ROOT_DIR = args[1];
 
         Map<Short, RunnableRemoteProcedure> mapRP = new HashMap<>();
         setRemoteProcedures(mapRP);
 
+        File rootDir = new File(PATH_TO_ROOT_DIR);
         long clientsAmount = 0;
 
         // Conectar o processo a um socket
@@ -58,7 +58,7 @@ public class MultiThreadedServer {
                         clientsAmount, cs.getRemoteSocketAddress());
 
             // Inicia uma nova thread para tratar esse client (thread per connection)
-            new ConnectionProtocol(cs, mapRP);
+            new ConnectionProtocol(cs, mapRP, rootDir);
         } while (true);
     }
 

@@ -16,6 +16,7 @@ public class ConnectionProtocol implements Runnable {
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private Map<Short, RunnableRemoteProcedure> mapRP;
+    private File rootDir;
 
     /**
      * Inicializa uma conexão com um um socket que será tratado como
@@ -23,7 +24,7 @@ public class ConnectionProtocol implements Runnable {
      *
      * @param targetSocket
      */
-    public ConnectionProtocol(Socket targetSocket, Map<Short, RunnableRemoteProcedure> mapRP) {
+    public ConnectionProtocol(Socket targetSocket, Map<Short, RunnableRemoteProcedure> mapRP, File rootDir) {
         this.socket = targetSocket;
         this.mapRP = mapRP;
 
@@ -31,9 +32,11 @@ public class ConnectionProtocol implements Runnable {
 
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
+            this.rootDir = rootDir;
 
             try {
                 (new Thread(this)).start(); // chama o método `run`
+                sendRemoteDir();
             } catch (IllegalThreadStateException ex) {
                 Logger.getLogger(ConnectionProtocol.class.getName())
                         .log(Level.SEVERE, "thread was already started", ex);
@@ -83,6 +86,19 @@ public class ConnectionProtocol implements Runnable {
         } while (true);
 
         this.close();
+    }
+
+    /**
+     *
+     */
+    void sendRemoteDir() {
+        try {
+            this.out.writeObject(rootDir);
+            this.out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionProtocol.class.getName())
+                    .log(Level.SEVERE, "Erro de I/O ao enviar rootDir", ex);
+        }
     }
 
     /**
