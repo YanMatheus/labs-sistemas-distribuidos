@@ -3,6 +3,8 @@ package server;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import shared.RPCMetaData;
 
 @FunctionalInterface
@@ -32,7 +34,11 @@ interface RemoteProcedure {
         InfoLog.printToStdout("client called RPC desvioPadrao(...{%d})", values.size());
 
         // Realizar a operação do procedimento `desvioPadrao`
-        Double result = 0d; // TODO: calcular o desvio padrão de `values`
+        Stream<Double> valuesAsStream = values.stream();
+        double mean = valuesAsStream.collect( Collectors.averagingDouble(Double::doubleValue) );
+        double numerador = 0d;
+        for (Double value : values) numerador += Math.pow(value - mean, 2);
+        Double result = Math.sqrt(numerador / ((double) values.size() - 1));
 
         // [send] Escrever o resultado do procedimento `desvioPadrao`
         out.writeDouble(result);
