@@ -3,12 +3,14 @@ package client.GUI;
 import client.connection.SocketController;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author Yan
  * @author micael
+ * @author Victor
  */
 public class MainWindow extends javax.swing.JFrame {
     ClientController cc = null;
@@ -65,6 +67,13 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         dirTree = new javax.swing.JTree();
+        tfOrigem = new javax.swing.JTextField();
+        tfDestino = new javax.swing.JTextField();
+        btnBaixar = new javax.swing.JButton();
+        lbOrigem = new javax.swing.JLabel();
+        lbDestino = new javax.swing.JLabel();
+        btnSelecionarOrigem = new javax.swing.JButton();
+        btnSelecionarDestino = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.darkGray);
@@ -206,19 +215,96 @@ public class MainWindow extends javax.swing.JFrame {
         dirTree.setToolTipText("");
         jScrollPane1.setViewportView(dirTree);
 
+        tfOrigem.setName("tf_origem"); // NOI18N
+        tfOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfOrigemKeyReleased(evt);
+            }
+        });
+
+        tfDestino.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfDestinoKeyReleased(evt);
+            }
+        });
+
+        btnBaixar.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        btnBaixar.setText("Baixar");
+        btnBaixar.setEnabled(false);
+
+        lbOrigem.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbOrigem.setForeground(java.awt.Color.lightGray);
+        lbOrigem.setText("Diretório de origem");
+
+        lbDestino.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbDestino.setForeground(java.awt.Color.lightGray);
+        lbDestino.setText("Destino");
+
+        btnSelecionarOrigem.setText("Selecionar");
+        btnSelecionarOrigem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelecionarOrigemActionPerformed(evt);
+            }
+        });
+        btnSelecionarOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnSelecionarOrigemKeyPressed(evt);
+            }
+        });
+
+        btnSelecionarDestino.setText("Selecionar");
+        btnSelecionarDestino.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelecionarDestinoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(605, 605, 605))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbDestino)
+                            .addComponent(tfOrigem, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                            .addComponent(tfDestino))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSelecionarOrigem)
+                            .addComponent(btnSelecionarDestino))
+                        .addGap(26, 26, 26)
+                        .addComponent(btnBaixar, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lbOrigem)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(140, 140, 140)
+                .addComponent(lbOrigem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSelecionarOrigem))
+                        .addGap(89, 89, 89)
+                        .addComponent(lbDestino)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSelecionarDestino)))
+                    .addComponent(btnBaixar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Cópia de Diretórios", jPanel3);
@@ -253,9 +339,66 @@ public class MainWindow extends javax.swing.JFrame {
           && enter != '.' ) evt.consume();
     }//GEN-LAST:event_tfValoresDesvioPadraoKeyTyped
 
+    private void tfOrigemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfOrigemKeyReleased
+        // TODO add your handling code here:
+        String origemText  = tfOrigem.getText().trim();
+        String destinoText = tfDestino.getText().trim();
+        btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
+    }//GEN-LAST:event_tfOrigemKeyReleased
+
+    private void tfDestinoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfDestinoKeyReleased
+        // TODO add your handling code here:
+        String origemText  = tfOrigem.getText().trim();
+        String destinoText = tfDestino.getText().trim();
+        btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
+    }//GEN-LAST:event_tfDestinoKeyReleased
+
+    private void btnSelecionarOrigemKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSelecionarOrigemKeyPressed
+
+    private void btnSelecionarOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser;
+        
+        chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Diretório de Origem");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        chooser.setAcceptAllFileFilterUsed(false);
+        
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            tfOrigem.setText("" + chooser.getSelectedFile());
+        } else {
+            tfOrigem.setText("");
+        }
+    }//GEN-LAST:event_btnSelecionarOrigemActionPerformed
+
+    private void btnSelecionarDestinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarDestinoActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser;
+        
+        chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Diretório de Destino");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        chooser.setAcceptAllFileFilterUsed(false);
+        
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            tfDestino.setText("" + chooser.getSelectedFile());
+        } else {
+            tfDestino.setText("");
+        }
+    }//GEN-LAST:event_btnSelecionarDestinoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBaixar;
     private javax.swing.JButton btnCalcularDesvio;
+    private javax.swing.JButton btnSelecionarDestino;
+    private javax.swing.JButton btnSelecionarOrigem;
     private javax.swing.JButton clearButton;
     private javax.swing.JTree dirTree;
     private javax.swing.JTextPane historyPanel;
@@ -265,7 +408,11 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbDestino;
+    private javax.swing.JLabel lbOrigem;
     private javax.swing.JPanel tabs_JP;
+    private javax.swing.JTextField tfDestino;
+    private javax.swing.JTextField tfOrigem;
     private javax.swing.JFormattedTextField tfValoresDesvioPadrao;
     // End of variables declaration//GEN-END:variables
 }
