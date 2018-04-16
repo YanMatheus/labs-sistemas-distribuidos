@@ -29,7 +29,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-
+        this.setTitle("Lab 1 - Remote Procedure Call");
         this.cc = cc;
 
         ConnectionDialog connDialog = new ConnectionDialog(this, true);
