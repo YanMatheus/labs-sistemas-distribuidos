@@ -96,7 +96,6 @@ public class ConnectionProtocol implements Runnable {
         try {
             this.out.writeBoolean(found);
             this.out.flush();
-            InfoLog.printToStdout("sended status 'RPC %s'", found ? "FOUND" : "NOT FOUND");
         } catch (IOException ex) {
             Logger.getLogger(ConnectionProtocol.class.getName())
                     .log(Level.SEVERE, "Erro de I/O ao enviar status da RP", ex);

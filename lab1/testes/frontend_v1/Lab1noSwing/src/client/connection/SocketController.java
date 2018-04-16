@@ -38,7 +38,6 @@ public class SocketController {
 
         // [receive] Leitura da confirmação do server sobre se a RP foi encontrada
         Boolean found = this.in.readBoolean();
-        System.out.printf("[receive] RPC status '%s'\n", found ? "FOUND" : "NOT FOUND");
 
         if (found) {
             System.out.printf("[waiting] server RPC response\n");
