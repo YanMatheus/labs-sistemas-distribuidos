@@ -19,8 +19,9 @@ import javax.swing.tree.TreePath;
  * @author Victor
  */
 public class MainWindow extends javax.swing.JFrame {
-    ClientController cc = null;
-    long historyLine = 0;
+    private ClientController cc = null;
+    private long historyLine = 0;
+    private String rootName;
 
     public MainWindow(ClientController cc) {
         initComponents();
@@ -43,6 +44,8 @@ public class MainWindow extends javax.swing.JFrame {
             try {
                 SocketController cs = new SocketController(connDialog.ip, connDialog.port);
                 cc.setClientSocket(cs);
+
+                this.rootName = cs.getRemoteSocketAddressString();
                 buildJTree( cs.getRootDir() );
                 break;
             } catch (Exception ex) {
@@ -59,25 +62,18 @@ public class MainWindow extends javax.swing.JFrame {
 
 
     private void buildJTree(File fileRoot) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode( new FileNode(fileRoot) );
-        // this.dirTree = new javax.swing.JTree( new DefaultTreeModel(root) );
+        DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(rootName);
+        DefaultMutableTreeNode rootRemoteDir = new DefaultMutableTreeNode( new FileNode(fileRoot) );
+
+        rootNode.add(rootRemoteDir);
+
         this.dirTree.setShowsRootHandles(true);
-        this.dirTree.setModel( new DefaultTreeModel(root) );
+        this.dirTree.setModel( new DefaultTreeModel(rootNode) );
         this.jScrollPane1.setViewportView(dirTree);
+        this.dirTree.expandRow(0);
 
-        ChildNode ccn = new ChildNode(fileRoot, root);
+        ChildNode ccn = new ChildNode(fileRoot, rootRemoteDir);
         (new Thread(ccn)).start();
-    }
-
-    private String toPath(String s) {
-        String str;
-        String path = File.separator;
-
-        str = s.replaceAll("[\\[\\]]","").replaceAll("\\s+", "");
-        String termo[] = str.split(",");
-
-        for (int i = 0; i < termo.length; ++i) path += termo[i] + File.separator;
-        return path;
     }
 
     private void enableBtnBaixar() {
@@ -87,11 +83,18 @@ public class MainWindow extends javax.swing.JFrame {
       );
     }
 
+    private String treePathtoStringPath(String pathStr) {
+        return pathStr
+                .substring(this.rootName.length() + 3, pathStr.length() - 1)
+                .replaceAll(", ", File.separator);
+    }
+
     private void atuarSobreDiretorioSelecionado(TreePath tp) {
         if (tp == null) return;
-        TreeNode node = (TreeNode) tp.getLastPathComponent();
-        if ( !node.isLeaf() ) {
-            tfOrigem.setText( toPath(tp.toString()) );
+        TreeNode selectedNode = (TreeNode) tp.getLastPathComponent();
+
+        if ((!selectedNode.isLeaf()) && (selectedNode.getParent() != null)) {
+            tfOrigem.setText( treePathtoStringPath(tp.toString()) );
             enableBtnBaixar();
         }
     }
