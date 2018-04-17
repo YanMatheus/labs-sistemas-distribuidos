@@ -23,10 +23,10 @@ import shared.RPCMetaData;
  */
 public class SocketController {
 
-    private Socket cs;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    private File rootDir;
+    private final Socket cs;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
+    private final File rootDir;
 
     public Double callRPDesvioPadrao(List<Double> valores) throws IOException {
         // Definição dos argumentos para a função remota `DesvioPadrao`
