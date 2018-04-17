@@ -1,3 +1,4 @@
+// (c) classe copiada de https://stackoverflow.com/questions/23804675
 package client.GUI;
 
 import java.io.File;

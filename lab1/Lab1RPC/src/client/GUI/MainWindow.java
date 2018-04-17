@@ -397,6 +397,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_tfValoresDesvioPadraoKeyTyped
 
     private void dirTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dirTreeMousePressed
+        // (c) trecho editado mas copiado https://stackoverflow.com/questions/23804675
         int selRow = dirTree.getRowForLocation(evt.getX(), evt.getY());
         TreePath selPath = dirTree.getPathForLocation(evt.getX(), evt.getY());
 
