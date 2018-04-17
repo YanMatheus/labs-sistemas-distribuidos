@@ -9,7 +9,7 @@ import shared.RPCMetaData;
 
 @FunctionalInterface
 interface RunnableRemoteProcedure {
-    void run(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException;
+    void run(RPCMetaData rmd, ObjectOutputStream out, File rootDir) throws EOFException, IOException;
 }
 
 /**
@@ -27,7 +27,7 @@ interface RemoteProcedure {
      * @throws EOFException - if this input stream reaches the end before reading four bytes.
      * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
      */
-    static void doDesvioPadrao(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException {
+    static void doDesvioPadrao(RPCMetaData rmd, ObjectOutputStream out, File rootDir) throws EOFException, IOException {
         ArrayList<Object> args = rmd.getArgs();
 
         List<Double> values = (List<Double>) args.get(0);
@@ -50,15 +50,14 @@ interface RemoteProcedure {
 
     /**
      * Realiza as ações para o
-     * procedimento remoto `DesvioPadrao`.
+     * procedimento remoto `BaixarDiretorio`.
      * @throws EOFException - if this input stream reaches the end before reading four bytes.
      * @throws IOException - the stream has been closed and the contained input stream does not support reading after close, or another I/O error occurs.
      */
-    static void doBaixarDiretorio(RPCMetaData rmd, ObjectOutputStream out) throws EOFException, IOException {
+    static void doBaixarDiretorio(RPCMetaData rmd, ObjectOutputStream out, File rootDir) throws EOFException, IOException {
         ArrayList<Object> args = rmd.getArgs();
 
-        // TODO:   alterar para rootDir.getParent() |/
-        String dirOrigem = "/home/micael/" + ((String) args.get(0));
+        String dirOrigem = rootDir.getParent() + File.separator + ((String) args.get(0));
         InfoLog.printToStdout("client called RPC baixar_diretorio(...{%d})", 1);
 
         // Realizar a operação do procedimento `baixarDiretorio`

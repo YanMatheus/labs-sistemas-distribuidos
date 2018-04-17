@@ -72,7 +72,7 @@ public class ConnectionProtocol implements Runnable {
             if (remoteProcedure != null) {
                 this.sendRPCStatus(true);
                 try {
-                    remoteProcedure.run(rmd, out);
+                    remoteProcedure.run(rmd, out, this.rootDir);
                 } catch (IOException ex) {
                     Logger.getLogger(ConnectionProtocol.class.getName())
                             .log(Level.WARNING, "Erro ao executar método remoto", ex);
