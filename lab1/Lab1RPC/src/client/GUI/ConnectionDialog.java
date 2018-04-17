@@ -81,6 +81,11 @@ public class ConnectionDialog extends javax.swing.JDialog {
         ipTextField.setCaretColor(java.awt.Color.white);
         ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ipTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
+        ipTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ipTextFieldActionPerformed(evt);
+            }
+        });
         ipTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 ipTextFieldKeyReleased(evt);
@@ -93,6 +98,11 @@ public class ConnectionDialog extends javax.swing.JDialog {
         portTextField.setToolTipText("digite a porta para a conexão com o servidor");
         portTextField.setCaretColor(java.awt.Color.white);
         portTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
+        portTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portTextFieldActionPerformed(evt);
+            }
+        });
         portTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 portTextFieldKeyTyped(evt);
@@ -191,6 +201,14 @@ public class ConnectionDialog extends javax.swing.JDialog {
         String serverIP = ipTextField.getText().trim();
         btnConectar.setEnabled( !portText.isEmpty() && !serverIP.isEmpty() );
     }//GEN-LAST:event_portTextFieldKeyReleased
+
+    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
+        if ( btnConectar.isEnabled() ) btnConectarActionPerformed(evt);
+    }//GEN-LAST:event_portTextFieldActionPerformed
+
+    private void ipTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipTextFieldActionPerformed
+        if ( btnConectar.isEnabled() ) btnConectarActionPerformed(evt);
+    }//GEN-LAST:event_ipTextFieldActionPerformed
 
 
 
