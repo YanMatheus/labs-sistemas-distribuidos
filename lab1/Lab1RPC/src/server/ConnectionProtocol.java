@@ -23,6 +23,8 @@ public class ConnectionProtocol implements Runnable {
      * <em>client</em>.
      *
      * @param targetSocket
+     * @param mapRP
+     * @param rootDir
      */
     public ConnectionProtocol(Socket targetSocket, Map<Short, RunnableRemoteProcedure> mapRP, File rootDir) {
         this.socket = targetSocket;
@@ -105,8 +107,7 @@ public class ConnectionProtocol implements Runnable {
      * Escreve a confirmação (ou não) se uma função remota foi encontrada no
      * servidor.
      *
-     * @param found - Must be <code>true</code> if the remote procedure was
-     * found.
+     * @param found - Must be <code>true</code> if the remote procedure was found.
      */
     void sendRPCStatus(Boolean found) {
         try {
