@@ -54,12 +54,13 @@ public class SocketController {
         return null;
     }
 
-    public Boolean callRPBaixarDiretorio(String dirRemoto, String dirDestino, String serverHost) throws IOException {
-        String caminhoArquivoBaixado = dirDestino + File.separator + serverHost.replaceAll("[.:/]", "") + ".zip";
+    public Boolean callRPBaixarDiretorio(String dirRemoto, String dirDestino, String fileName) throws IOException {
+        String caminhoArquivoBaixado = dirDestino + File.separator + fileName;
 
         // Definição dos argumentos para a função remota `DesvioPadrao`
         ArrayList<Object> RPArgs = new ArrayList<>(1);
         RPArgs.add(0, dirRemoto);
+        System.out.printf("baixar>>%s<<%n", dirRemoto);
 
         // Construção do objeto que será recebido pelo servidor
         RPCMetaData rmd = new RPCMetaData(RPCMetaData.ID_RP_BAIXARDIRETORIO, RPArgs);

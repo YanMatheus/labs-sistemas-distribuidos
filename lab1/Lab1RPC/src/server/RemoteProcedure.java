@@ -37,7 +37,9 @@ interface RemoteProcedure {
         Stream<Double> valuesAsStream = values.stream();
         double mean = valuesAsStream.collect( Collectors.averagingDouble(Double::doubleValue) );
         double numerador = 0d;
-        for (Double value : values) numerador += Math.pow(value - mean, 2);
+        numerador = values.stream()
+                .map(value -> Math.pow(value - mean, 2))
+                .reduce(numerador, (accum, value) -> accum + value);
         Double result = Math.sqrt(numerador / ((double) values.size() - 1));
 
         // [send] Escrever o resultado do procedimento `desvioPadrao`
@@ -56,17 +58,17 @@ interface RemoteProcedure {
         ArrayList<Object> args = rmd.getArgs();
 
         // TODO:   alterar para rootDir.getParent() |/
-        String dirOrigem = "/home/icomp/Área de Trabalho" + ((String) args.get(0));
+        String dirOrigem = "/home/micael/" + ((String) args.get(0));
         InfoLog.printToStdout("client called RPC baixar_diretorio(...{%d})", 1);
 
         // Realizar a operação do procedimento `baixarDiretorio`
-        final String dirOrigemZip = dirOrigem.substring(0, dirOrigem.length()-1) + ".zip";
+        final String dirOrigemZip = dirOrigem + ".zip";
 
         try {
             Zipper.zipFile(dirOrigem, dirOrigemZip);
         } catch (IOException ex) {
             ex.printStackTrace();
-            out.writeBoolean(false);
+            out.writeLong(0L); // indicar erro
             out.flush();
             return;
         }

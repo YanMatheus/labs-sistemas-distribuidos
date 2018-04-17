@@ -53,13 +53,12 @@ public class ClientController {
      * @param dirDestino
      * @return
      */
-    public Boolean baixarDiretorio(String dirRemoto, String dirDestino) {
+    public Boolean baixarDiretorio(String dirRemoto, String dirDestino, String fileName) {
         if (this.cs == null) return false;
 
         try {
 
-            return this.cs.callRPBaixarDiretorio(dirRemoto,
-              dirDestino, this.cs.getRemoteSocketAddressString());
+            return this.cs.callRPBaixarDiretorio(dirRemoto, dirDestino, fileName);
 
         } catch (IOException ex) {
             ex.printStackTrace();

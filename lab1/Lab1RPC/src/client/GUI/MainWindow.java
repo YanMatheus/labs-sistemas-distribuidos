@@ -69,7 +69,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         this.dirTree.setShowsRootHandles(true);
         this.dirTree.setModel( new DefaultTreeModel(rootNode) );
-        this.jScrollPane1.setViewportView(dirTree);
         this.dirTree.expandRow(0);
 
         ChildNode ccn = new ChildNode(fileRoot, rootRemoteDir);
@@ -95,6 +94,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         if ((!selectedNode.isLeaf()) && (selectedNode.getParent() != null)) {
             tfOrigem.setText( treePathtoStringPath(tp.toString()) );
+            tfArquivoDestino.setText( selectedNode.toString() + ".zip" );
             enableBtnBaixar();
         }
     }
@@ -118,11 +118,13 @@ public class MainWindow extends javax.swing.JFrame {
         dirTree = new javax.swing.JTree();
         tfOrigem = new javax.swing.JTextField();
         tfDestino = new javax.swing.JTextField();
-        btnBaixar = new javax.swing.JButton();
         lbOrigem = new javax.swing.JLabel();
         lbDestino = new javax.swing.JLabel();
         btnSelecionarOrigem = new javax.swing.JButton();
         btnSelecionarDestino = new javax.swing.JButton();
+        tfArquivoDestino = new javax.swing.JTextField();
+        lbNomeArquivoDestino = new javax.swing.JLabel();
+        btnBaixar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(java.awt.Color.darkGray);
@@ -228,13 +230,21 @@ public class MainWindow extends javax.swing.JFrame {
         jTabbedPane1.addTab("Desvio Padrão", tabs_JP);
 
         jPanel3.setBackground(java.awt.Color.darkGray);
+        jPanel3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        dirTree.setToolTipText("Selecione um diretório para copiar");
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("localhost/127.0.0.1:4444");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("foo");
+        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("bar");
+        treeNode2.add(treeNode3);
+        treeNode1.add(treeNode2);
+        dirTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        dirTree.setToolTipText("Selecione um diretório");
         dirTree.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 dirTreeMousePressed(evt);
             }
         });
+        jScrollPane1.setViewportView(dirTree);
 
         tfOrigem.setName("tf_origem"); // NOI18N
         tfOrigem.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -249,22 +259,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        btnBaixar.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        btnBaixar.setText("Baixar");
-        btnBaixar.setEnabled(false);
-        btnBaixar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBaixarActionPerformed(evt);
-            }
-        });
-
         lbOrigem.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lbOrigem.setForeground(java.awt.Color.lightGray);
-        lbOrigem.setText("Diretório de origem");
+        lbOrigem.setText("Diretório que será copiado");
 
         lbDestino.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lbDestino.setForeground(java.awt.Color.lightGray);
-        lbDestino.setText("Destino");
+        lbDestino.setText("Destino do diretório copiado");
 
         btnSelecionarOrigem.setText("Selecionar");
         btnSelecionarOrigem.addActionListener(new java.awt.event.ActionListener() {
@@ -280,40 +281,65 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        tfArquivoDestino.setEditable(false);
+        tfArquivoDestino.setToolTipText("nome do arquivo ZIP");
+        tfArquivoDestino.setFocusable(false);
+
+        lbNomeArquivoDestino.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbNomeArquivoDestino.setForeground(java.awt.Color.lightGray);
+        lbNomeArquivoDestino.setText("nome do arquivo");
+
+        btnBaixar.setBackground(new java.awt.Color(0, 230, 118));
+        btnBaixar.setFont(new java.awt.Font("DejaVu Sans", 0, 18)); // NOI18N
+        btnBaixar.setText("Baixar");
+        btnBaixar.setToolTipText("");
+        btnBaixar.setBorder(null);
+        btnBaixar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBaixar.setEnabled(false);
+        btnBaixar.setNextFocusableComponent(jTabbedPane1);
+        btnBaixar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBaixarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(lbDestino)
                             .addComponent(tfOrigem, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                            .addComponent(tfDestino))
+                            .addComponent(tfDestino)
+                            .addComponent(lbDestino, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbOrigem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnSelecionarOrigem)
-                            .addComponent(btnSelecionarDestino))
-                        .addGap(26, 26, 26)
-                        .addComponent(btnBaixar, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(lbOrigem)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(btnSelecionarDestino)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(tfArquivoDestino)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbNomeArquivoDestino)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBaixar, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 483, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(140, 140, 140)
                 .addComponent(lbOrigem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBaixar, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfOrigem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -323,8 +349,11 @@ public class MainWindow extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSelecionarDestino)))
-                    .addComponent(btnBaixar, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnSelecionarDestino))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(tfArquivoDestino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbNomeArquivoDestino))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -338,28 +367,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void clearButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearButtonActionPerformed
         tfValoresDesvioPadrao.setText("");
     }//GEN-LAST:event_clearButtonActionPerformed
-
-    private void btnBaixarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBaixarActionPerformed
-        btnBaixar.setEnabled(false);
-
-        Boolean baixou = this.cc.baixarDiretorio(
-            tfOrigem.getText(),
-            tfDestino.getText()
-        );
-
-        if (baixou) {
-          JOptionPane.showMessageDialog(null,
-            "Diretório baixado com sucesso!",
-            "Feito", JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(null,
-              "Não foi possível baixar o diretório selecionado",
-              "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
-        }
-
-
-        btnBaixar.setEnabled(true);
-    }//GEN-LAST:event_btnBaixarActionPerformed
 
     private void btnCalcularDesvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularDesvioActionPerformed
         btnCalcularDesvio.setEnabled(false);
@@ -429,6 +436,28 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnSelecionarDestinoActionPerformed
 
+    private void btnBaixarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBaixarActionPerformed
+        btnBaixar.setEnabled(false);
+
+        Boolean baixou = this.cc.baixarDiretorio(
+            tfOrigem.getText().trim(),
+            tfDestino.getText().trim(),
+            tfArquivoDestino.getText()
+        );
+
+        if (baixou) {
+            JOptionPane.showMessageDialog(null,
+                "Diretório baixado com sucesso!",
+                "Feito", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null,
+                "Não foi possível baixar o diretório selecionado",
+                "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
+        }
+
+        btnBaixar.setEnabled(true);
+    }//GEN-LAST:event_btnBaixarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBaixar;
@@ -445,8 +474,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lbDestino;
+    private javax.swing.JLabel lbNomeArquivoDestino;
     private javax.swing.JLabel lbOrigem;
     private javax.swing.JPanel tabs_JP;
+    private javax.swing.JTextField tfArquivoDestino;
     private javax.swing.JTextField tfDestino;
     private javax.swing.JTextField tfOrigem;
     private javax.swing.JFormattedTextField tfValoresDesvioPadrao;
