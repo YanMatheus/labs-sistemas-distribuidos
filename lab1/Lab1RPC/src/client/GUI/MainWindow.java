@@ -77,8 +77,9 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void enableBtnBaixar() {
       btnBaixar.setEnabled(
-          !tfOrigem.getText().trim().isEmpty()
+             !tfOrigem.getText().trim().isEmpty()
           && !tfDestino.getText().trim().isEmpty()
+          && !tfArquivoDestino.getText().trim().isEmpty()
       );
     }
 
@@ -166,8 +167,8 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1.setText("Digite os números separados por espaço:");
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        clearButton.setBackground(new java.awt.Color(0, 230, 118));
-        clearButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/client/GUI/drawables/bin.png"))); // NOI18N
+        clearButton.setBackground(new java.awt.Color(153, 153, 0));
+        clearButton.setText("limpar");
         clearButton.setBorderPainted(false);
         clearButton.setIconTextGap(1);
         clearButton.setNextFocusableComponent(btnCalcularDesvio);
@@ -202,9 +203,9 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 680, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(tabs_JPLayout.createSequentialGroup()
-                        .addComponent(tfValoresDesvioPadrao, javax.swing.GroupLayout.PREFERRED_SIZE, 646, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tfValoresDesvioPadrao, javax.swing.GroupLayout.PREFERRED_SIZE, 614, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(clearButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCalcularDesvio, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -281,9 +282,12 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        tfArquivoDestino.setEditable(false);
         tfArquivoDestino.setToolTipText("nome do arquivo ZIP");
-        tfArquivoDestino.setFocusable(false);
+        tfArquivoDestino.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfArquivoDestinoKeyReleased(evt);
+            }
+        });
 
         lbNomeArquivoDestino.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         lbNomeArquivoDestino.setForeground(java.awt.Color.lightGray);
@@ -369,8 +373,6 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_clearButtonActionPerformed
 
     private void btnCalcularDesvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalcularDesvioActionPerformed
-        btnCalcularDesvio.setEnabled(false);
-
         Double resultado = this.cc.calcularDesvioPadrao( tfValoresDesvioPadrao.getText() );
         if (resultado != null) {
             try {
@@ -380,8 +382,6 @@ public class MainWindow extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
         }
-
-        btnCalcularDesvio.setEnabled(true);
     }//GEN-LAST:event_btnCalcularDesvioActionPerformed
 
     private void tfValoresDesvioPadraoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfValoresDesvioPadraoKeyReleased
@@ -392,7 +392,8 @@ public class MainWindow extends javax.swing.JFrame {
         char enter = evt.getKeyChar();
         if ( !Character.isDigit(enter)
           && !Character.isSpaceChar(enter)
-          && enter != '.' ) evt.consume();
+          && enter != '.'
+          && enter != '-' ) evt.consume();
     }//GEN-LAST:event_tfValoresDesvioPadraoKeyTyped
 
     private void dirTreeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dirTreeMousePressed
@@ -405,15 +406,11 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_dirTreeMousePressed
 
     private void tfOrigemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfOrigemKeyReleased
-        String origemText  = tfOrigem.getText().trim();
-        String destinoText = tfDestino.getText().trim();
-        btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
+        enableBtnBaixar();
     }//GEN-LAST:event_tfOrigemKeyReleased
 
     private void tfDestinoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfDestinoKeyReleased
-        String origemText  = tfOrigem.getText().trim();
-        String destinoText = tfDestino.getText().trim();
-        btnBaixar.setEnabled( !origemText.isEmpty() && !destinoText.isEmpty() );
+        enableBtnBaixar();
     }//GEN-LAST:event_tfDestinoKeyReleased
 
     private void btnSelecionarOrigemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelecionarOrigemActionPerformed
@@ -442,7 +439,7 @@ public class MainWindow extends javax.swing.JFrame {
         Boolean baixou = this.cc.baixarDiretorio(
             tfOrigem.getText().trim(),
             tfDestino.getText().trim(),
-            tfArquivoDestino.getText()
+            tfArquivoDestino.getText().trim()
         );
 
         if (baixou) {
@@ -457,6 +454,10 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnBaixar.setEnabled(true);
     }//GEN-LAST:event_btnBaixarActionPerformed
+
+    private void tfArquivoDestinoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfArquivoDestinoKeyReleased
+        enableBtnBaixar();
+    }//GEN-LAST:event_tfArquivoDestinoKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
