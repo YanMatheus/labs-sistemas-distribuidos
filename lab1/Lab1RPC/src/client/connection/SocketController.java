@@ -60,7 +60,6 @@ public class SocketController {
         // Definição dos argumentos para a função remota `DesvioPadrao`
         ArrayList<Object> RPArgs = new ArrayList<>(1);
         RPArgs.add(0, dirRemoto);
-        System.out.printf("baixar>>%s<<%n", dirRemoto);
 
         // Construção do objeto que será recebido pelo servidor
         RPCMetaData rmd = new RPCMetaData(RPCMetaData.ID_RP_BAIXARDIRETORIO, RPArgs);
