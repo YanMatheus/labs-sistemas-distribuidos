@@ -33,7 +33,7 @@ For this task we have RMI compiller - 'rmic'
 
 
 $ javac **/*.java # compilar tudo
-$ rmic server/RmiServer # gerar os stubs do server
+$ rmic server.RmiServer # gerar os stubs do server
 
 .
 ├── client
