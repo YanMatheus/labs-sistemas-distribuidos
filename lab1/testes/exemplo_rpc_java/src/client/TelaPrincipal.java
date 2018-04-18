@@ -11,6 +11,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.NumberFormatter;
 
 
+interface Callback {
+    void executar();
+}
+class Foo implements Callback {
+    public void executar() {
+        return;
+    }
+}
+
 public class TelaPrincipal {
   private JFrame janelaPrincipal;
   private ClientSocketController clientController;
@@ -33,7 +42,7 @@ public class TelaPrincipal {
 
 
   public TelaPrincipal() {
-    dialogRequestCredentials();
+    dialogRequestCredentials("Sacar Quantia", "Digite o valor para o saque", new Foo());
     initialize();
   }
 
@@ -135,43 +144,41 @@ public class TelaPrincipal {
    * Solicita os parâmetros para a conexão com servidor
    * e, em caso de sucesso, inicia a conexão.
    */
-  private void dialogRequestCredentials() {
+  private void dialogRequestCredentials(String titulo, String corpo, Callback acaoOk) {
     JTextField serverHostField = new JTextField(8);
-    JPanel panel = new JPanel( new GridLayout(2, 2) );
+    JPanel panel = new JPanel( new GridLayout(0, 2) );
     NumberFormatter nfUS = new NumberFormatter( NumberFormat.getInstance(Locale.US) );
     JFormattedTextField serverPortField = new JFormattedTextField(nfUS);
-
+    
     nfUS.setValueClass(Integer.class);
     nfUS.setMinimum(0);
-    nfUS.setMaximum(65535);
     nfUS.setAllowsInvalid(false);
-
-    serverHostField.setText("localhost");
-    serverPortField.setText("4444");
-
-    panel.add( new JLabel("Host:") );
-    panel.add(serverHostField);
-    panel.add( new JLabel("Porta:") );
+    
+    /* desenhar o panel */
+    serverPortField.setText("0");
+    
+    //panel.add( new JLabel(corpo) );
+    panel.add( new JLabel("R$") );
     panel.add(serverPortField);
 
-    do {
-      int selectOpt = JOptionPane.showConfirmDialog(null, panel,
-        "Informações para a Conexão", JOptionPane.OK_CANCEL_OPTION);
+    //
+    int selectOpt = JOptionPane.showConfirmDialog(null, panel, titulo, 
+                                JOptionPane.OK_CANCEL_OPTION, 2, 
+                                new ImageIcon("/home/victor/Área de Trabalho/moneyico.png"));
+        
+    if (selectOpt != JOptionPane.OK_OPTION) System.exit(0);
 
-      if (selectOpt != JOptionPane.OK_OPTION) System.exit(1);
+    String serverHost = serverHostField.getText();
+    int serverPort = Integer.parseInt(
+    serverPortField.getText().replace(",", ""));
 
-      String serverHost = serverHostField.getText();
-      int serverPort = Integer.parseInt(
-        serverPortField.getText().replace(",", ""));
-
-      try {
-        this.clientController = new ClientSocketController(serverHost, serverPort);
-        return;
-      } catch (IOException ex) {
-          JOptionPane.showMessageDialog(null,
-            "Não foi possível conectar",
-            "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
-      }
-    } while (true);
+    // try {
+        acaoOk.executar();
+        // this.clientController = new ClientSocketController(serverHost, serverPort);
+    // } catch (IOException ex) {
+      // JOptionPane.showMessageDialog(null,
+        // "Não foi possível efetuar a operação",
+        // "Erro na Operação", JOptionPane.ERROR_MESSAGE);
+    // }
   }
 }

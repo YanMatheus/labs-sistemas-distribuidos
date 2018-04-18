@@ -66,15 +66,14 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
         jLabel1.setForeground(java.awt.Color.white);
-        jLabel1.setText("IP:");
+        jLabel1.setText("IP:Porta:");
 
         jLabel2.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
         jLabel2.setForeground(java.awt.Color.white);
-        jLabel2.setText("Porta:");
+        jLabel2.setText("Nickname:");
 
         ipTextField.setBackground(java.awt.Color.darkGray);
         ipTextField.setForeground(java.awt.Color.white);
-        ipTextField.setText("localhost");
         ipTextField.setToolTipText("digite o endereço IP do servidor");
         ipTextField.setCaretColor(java.awt.Color.white);
         ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
@@ -92,7 +91,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         portTextField.setBackground(java.awt.Color.darkGray);
         portTextField.setForeground(java.awt.Color.white);
-        portTextField.setText("4444");
         portTextField.setToolTipText("digite a porta para a conexão com o servidor");
         portTextField.setCaretColor(java.awt.Color.white);
         portTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
