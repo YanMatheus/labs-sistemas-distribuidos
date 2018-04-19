@@ -55,8 +55,8 @@ public class MainWindow extends javax.swing.JFrame {
 
         java.net.URL imgUrl = getClass().getResource("drawable/moneyico.png");
         int selectOpt = JOptionPane.showConfirmDialog(null, panel, titulo,
-                                    JOptionPane.OK_CANCEL_OPTION, 2,
-                                    new ImageIcon(imgUrl));
+                                        JOptionPane.OK_CANCEL_OPTION, 2,
+                        imgUrl == null ? null : new ImageIcon(imgUrl));
 
         if (selectOpt != JOptionPane.OK_OPTION) return;
 
