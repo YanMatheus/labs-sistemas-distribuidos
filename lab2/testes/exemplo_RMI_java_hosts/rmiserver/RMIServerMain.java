@@ -18,7 +18,8 @@ public class RMIServerMain {
             // Export the object.
             PrintingInterface stub = (PrintingInterface) UnicastRemoteObject.exportObject(implementation, 6789);
 
-            System.setProperty("java.rmi.server.hostname", "10.208.200.172");
+            // System.setProperty("java.rmi.server.hostname", "10.208.200.172");
+            System.setProperty("java.rmi.server.hostname", "localhost");
             // System.setProperty("java.security.policy","file:///home/icomp/Área de Trabalho/Java-RMI-Example/server.policy");
 
             Registry registry = LocateRegistry.createRegistry(6789);

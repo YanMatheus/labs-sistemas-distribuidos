@@ -1,6 +1,6 @@
 package rmiserver;
 
-import shared.PrintingInterface;
+import shared.*;
 import java.rmi.RemoteException;
 
 /**
@@ -9,10 +9,10 @@ import java.rmi.RemoteException;
 public class PrintingInterfaceImpl implements PrintingInterface {
 
     @Override
-    public int echoMessage(String str) throws RemoteException {
-        System.out.println( "Got a message from the client: " + str );
-
-        return str.length();
+    public int echoMessage(ClientInterface autor, String msg) throws RemoteException {
+        System.out.println("Got a message from the client: " + msg);
+        autor.setName("alteradoo");
+        return msg.length();
     }
 
 }

@@ -4,21 +4,6 @@ import shared.PrintingInterface;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-/**
- * Main class for a client.
- *
- * Set the following properties on the command line:
- *
- * <br>
- * -Djava.rmi.server.useCodebaseOnly=false
- * <br>
- * -Djava.rmi.server.codebase=file:/path/to/compiled/classes/
- * <br>
- * -Djava.security.policy=client.policy
- * <br>
- *
- * <b>NOTE: MAKE SURE YOU HAVE THE TRAILING / ON THE CODEBASE PATH</b>
- */
 public class RMIClientMain {
 
     public static void main(String[] args) {
@@ -30,7 +15,8 @@ public class RMIClientMain {
 
         try {
             String serviceName = "RMI-EchoMessage";
-            Registry registry = LocateRegistry.getRegistry("10.208.200.172", 6789);
+            // Registry registry = LocateRegistry.getRegistry("10.208.200.172", 6789);
+            Registry registry = LocateRegistry.getRegistry("localhost", 6789);
             PrintingInterface comp = (PrintingInterface) registry.lookup(serviceName);
 
             System.out.println("About to try to print!");
@@ -38,9 +24,11 @@ public class RMIClientMain {
             String messageToEcho = "Hi from the client!";
             if( args.length > 0 ) messageToEcho = args[0];
 
-            int returnVal = comp.echoMessage( messageToEcho );
+            ClientInterfaceImpl c = new ClientInterfaceImpl("joão byte");
+            int returnVal = comp.echoMessage(c, messageToEcho);
 
             System.out.println( "The return value from the server is (msg length): " + returnVal );
+            System.out.println("client.name: " + c.getName());
         } catch (Exception e) {
             System.err.println( "Exception while trying to echo:" );
             e.printStackTrace();

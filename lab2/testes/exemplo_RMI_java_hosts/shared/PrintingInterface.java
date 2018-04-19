@@ -17,5 +17,5 @@ public interface PrintingInterface extends Remote {
      * @return
      * @throws RemoteException
      */
-    public int echoMessage( String str ) throws RemoteException;
+    public int echoMessage(ClientInterface autor, String msg) throws RemoteException;
 }
