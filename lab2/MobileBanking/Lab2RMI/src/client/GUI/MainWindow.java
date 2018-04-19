@@ -1,16 +1,20 @@
 package client.GUI;
 
 import java.awt.GridLayout;
+import java.rmi.RemoteException;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.text.NumberFormatter;
+import shared.BusyOperationException;
 
 /**
  * Janela inicial após iniciar a conexão.
@@ -20,78 +24,71 @@ import javax.swing.text.NumberFormatter;
  * @author Victor
  */
 public class MainWindow extends javax.swing.JFrame {
-    private ClientController cc = null;
+    private ClientMain cm = null;
 
-    public MainWindow(ClientController cc) {
+    public MainWindow(ClientMain cm) {
         initComponents();
-        this.cc = cc;
-
-        ConnectionDialog connDialog = new ConnectionDialog(this, true);
-        connDialog.setVisible(true);
-
-        do {
-
-            try {
-
-                break;
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null,
-                    "Não foi possível conectar",
-                    "Erro ao Conectar", JOptionPane.ERROR_MESSAGE);
-                connDialog.setVisible(true);
-            }
-
-        } while (true);
-
-        this.lbNickName.setText(connDialog.nickname);
-        connDialog.dispose();
+        this.cm = cm;
     }
 
+    public void setLnNickName(String nickname) {
+        this.lbNickName.setText("Bem Vindo(a), " + nickname + "!");
+    }
 
-    private void mostrarDialogConfirmação(String titulo, String corpo, Callable acaoOk) {
-        JTextField serverHostField = new JTextField(8);
+    private void mostrarDialogConfirmação(String titulo, CallbackAcaoCritica acaoOk) {
         JPanel panel = new JPanel( new GridLayout(0, 2) );
         NumberFormatter nfUS = new NumberFormatter( NumberFormat.getInstance(Locale.US) );
-        JFormattedTextField serverPortField = new JFormattedTextField(nfUS);
+        JFormattedTextField tfQuantia = new JFormattedTextField(nfUS);
+        tfQuantia.setText("0");
 
         nfUS.setValueClass(Integer.class);
         nfUS.setMinimum(0);
         nfUS.setAllowsInvalid(false);
 
-        /* desenhar o panel */
-        serverPortField.setText("0");
+        panel.add( new JLabel("$") );
+        panel.add(tfQuantia);
 
-        //panel.add( new JLabel(corpo) );
-        panel.add( new JLabel("R$") );
-        panel.add(serverPortField);
+        java.net.URL imgUrl = getClass().getResource("drawable/moneyico.png");
+        int selectOpt = JOptionPane.showConfirmDialog(null, panel, titulo,
+                                    JOptionPane.OK_CANCEL_OPTION, 2,
+                                    new ImageIcon(imgUrl));
 
-        //
-        int selectOpt = JOptionPane.showConfirmDialog(null, panel, titulo, 
-                                    JOptionPane.OK_CANCEL_OPTION, 2, 
-                                    new ImageIcon("drawable/moneyico.png"));
+        if (selectOpt != JOptionPane.OK_OPTION) return;
 
-        //if (selectOpt != JOptionPane.OK_OPTION));
-
-        String serverHost = serverHostField.getText();
-        int serverPort = Integer.parseInt(
-        serverPortField.getText().replace(",", ""));
+        Double quantia = Double.parseDouble( tfQuantia.getText().replace(",", "") );
 
         try {
-            acaoOk.call();
-            // this.clientController = new ClientSocketController(serverHost, serverPort);
-        } catch (Exception ex) {
+            acaoOk.call(quantia);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
             JOptionPane.showMessageDialog(null,
-                "Não foi possível efetuar a operação",
-                "Erro na Operação", JOptionPane.ERROR_MESSAGE);
+                "Não foi possível efetuar essa operação",
+                "Falha na Operação", JOptionPane.ERROR_MESSAGE);
+        } catch (BusyOperationException ex) {
+            JOptionPane.showMessageDialog(null,
+                "Esta operação está sendo\nrealizada por outro cliente, aguarde.",
+                "Operação Ocupada!", JOptionPane.INFORMATION_MESSAGE);
         }
   }
-    
-    
-  public void setLabelSaldo(Double valor) {
-      lbSaldo.setText("R$" + valor.toString());
+
+    public void setLabelSaldo(double valor) {
+        lbSaldo.setText("$ " + valor);
   }
-    
-    
+
+    private double getValorLabelSaldo() {
+        return Double.parseDouble( lbSaldo.getText().substring(2) );
+    }
+
+    public void setLabelQuantidadeClientes(int qtdClientes) {
+        lbQuantidadeClientes.setText("" + qtdClientes);
+    }
+
+    public void atualizarUltimaMovimentacao(String nicknameAutor) {
+        Date dNow = new Date();
+        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy 'às' H:mm:ss");
+        lbDataEAutor.setText( ft.format(dNow) + " ~ " + nicknameAutor );
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -100,12 +97,11 @@ public class MainWindow extends javax.swing.JFrame {
         btnSacar = new javax.swing.JButton();
         lbSaldo = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
-        lbLogado = new javax.swing.JLabel();
         lbNickName = new javax.swing.JLabel();
         lbAtualizacao = new javax.swing.JLabel();
-        lbData = new javax.swing.JLabel();
-        lbHora = new javax.swing.JLabel();
+        lbDataEAutor = new javax.swing.JLabel();
         jSeparator3 = new javax.swing.JSeparator();
+        lbQuantidadeClientes = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mobile Banking");
@@ -119,7 +115,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         btnDepositar.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        btnDepositar.setText("Depositar");
+        btnDepositar.setForeground(new java.awt.Color(0, 102, 0));
+        btnDepositar.setText("DEPOSITAR");
         btnDepositar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDepositar.setPreferredSize(new java.awt.Dimension(180, 60));
         btnDepositar.addActionListener(new java.awt.event.ActionListener() {
@@ -129,7 +126,8 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         btnSacar.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        btnSacar.setText("Sacar");
+        btnSacar.setForeground(new java.awt.Color(102, 0, 0));
+        btnSacar.setText("SACAR");
         btnSacar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSacar.setPreferredSize(new java.awt.Dimension(180, 60));
         btnSacar.addActionListener(new java.awt.event.ActionListener() {
@@ -139,22 +137,20 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         lbSaldo.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
-        lbSaldo.setText("R$ 0,00");
+        lbSaldo.setText("$ 0.0");
 
-        lbLogado.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        lbLogado.setText("Logado como:");
-
-        lbNickName.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
-        lbNickName.setText("NickName");
+        lbNickName.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        lbNickName.setText("Bem Vindo(a). Nickname!");
 
         lbAtualizacao.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
-        lbAtualizacao.setText("Última Atualização:");
+        lbAtualizacao.setText("Última Movimentação:");
 
-        lbData.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
-        lbData.setText("01/01/1970");
+        lbDataEAutor.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
+        lbDataEAutor.setText("<nenhuma>");
 
-        lbHora.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
-        lbHora.setText("00:00");
+        lbQuantidadeClientes.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
+        lbQuantidadeClientes.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lbQuantidadeClientes.setText("0");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -163,31 +159,29 @@ public class MainWindow extends javax.swing.JFrame {
             .addComponent(jSeparator2)
             .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbLogado)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbNickName))
+                                .addComponent(lbNickName)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lbQuantidadeClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbAtualizacao)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lbData)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbHora))))))
+                                .addGap(0, 129, Short.MAX_VALUE)
+                                .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(lbSaldo)))
+                        .addGap(8, 8, 8))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(72, 72, 72)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDepositar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lbAtualizacao)
+                            .addComponent(lbDataEAutor))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(lbSaldo)))
-                .addGap(71, 71, 71))
+                        .addComponent(btnDepositar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,7 +189,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbNickName)
-                    .addComponent(lbLogado))
+                    .addComponent(lbQuantidadeClientes))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -203,15 +197,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lbAtualizacao)
                 .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbData)
-                    .addComponent(lbHora))
+                .addComponent(lbDataEAutor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDepositar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -219,20 +211,33 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            cm.fecharConexao();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainWindow.class.getName())
+                  .log(Level.SEVERE, null, ex);
+            System.exit(1);
+        }
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
 
     private void btnDepositarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositarActionPerformed
-        mostrarDialogConfirmação("Realizar Depósito",
-                "Digite o valor para depositar", (Callable<Boolean>) () -> {
-            return false;
+        mostrarDialogConfirmação("Realizar Depósito", new CallbackAcaoCritica() {
+            @Override
+            public void call(double x) throws RemoteException, BusyOperationException {
+                if (x > 0)
+                    cm.depositar(x);
+            }
         });
     }//GEN-LAST:event_btnDepositarActionPerformed
 
     private void btnSacarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacarActionPerformed
-        mostrarDialogConfirmação("Realizar Saque",
-                "Digite o valor para sacar", (Callable<Boolean>) () -> {
-            return false;
+        mostrarDialogConfirmação("Realizar Saque", new CallbackAcaoCritica() {
+            @Override
+            public void call(double x) throws RemoteException, BusyOperationException {
+                if (x > 0 && getValorLabelSaldo() >= x)
+                    cm.sacar(x);
+            }
         });
     }//GEN-LAST:event_btnSacarActionPerformed
 
@@ -243,10 +248,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JLabel lbAtualizacao;
-    private javax.swing.JLabel lbData;
-    private javax.swing.JLabel lbHora;
-    private javax.swing.JLabel lbLogado;
+    private javax.swing.JLabel lbDataEAutor;
     private javax.swing.JLabel lbNickName;
+    private javax.swing.JLabel lbQuantidadeClientes;
     private javax.swing.JLabel lbSaldo;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,8 +8,9 @@ package client.GUI;
  * @author Micael
  */
 public class ConnectionDialog extends javax.swing.JDialog {
-    String ip = null;
-    String nickname = null;
+    String ip;
+    int porta;
+    String nickname;
 
     public ConnectionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -175,7 +176,9 @@ public class ConnectionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        this.ip  = ipTextField.getText();
+        String[] parametrosConexao = ipTextField.getText().split(":");
+        this.ip = parametrosConexao[0];
+        this.porta = Integer.parseInt( parametrosConexao[1] );
         this.nickname = nicknameTextField.getText();
 
         this.setVisible(false);

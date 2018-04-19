@@ -1,0 +1,4 @@
+// https://docs.oracle.com/cd/E19118-01/n1.sprovsys41/817-4820/6mkaodgb5/index.html
+grant {
+    permission java.security.AllPermission;
+};
