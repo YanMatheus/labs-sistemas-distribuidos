@@ -43,7 +43,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         cancelButton.setBackground(new java.awt.Color(180, 0, 26));
         cancelButton.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
-        cancelButton.setForeground(java.awt.Color.white);
         cancelButton.setBorderPainted(false);
         cancelButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cancelButton.setLabel("CANCELAR");
@@ -74,7 +73,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
         jLabel2.setText("nickname");
 
         ipTextField.setBackground(java.awt.Color.darkGray);
-        ipTextField.setBorder(null);
         ipTextField.setForeground(java.awt.Color.white);
         ipTextField.setText("localhost:6789");
         ipTextField.setToolTipText("digite o endereço IP do servidor seguido da porta");
@@ -96,7 +94,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
         });
 
         nicknameTextField.setBackground(java.awt.Color.darkGray);
-        nicknameTextField.setBorder(null);
         nicknameTextField.setForeground(java.awt.Color.white);
         nicknameTextField.setText("foo");
         nicknameTextField.setToolTipText("digite a porta para a conexão com o servidor");
@@ -144,7 +141,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
         dialogPanelLayout.setVerticalGroup(
             dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dialogPanelLayout.createSequentialGroup()
-                .addContainerGap(89, Short.MAX_VALUE)
+                .addContainerGap(83, Short.MAX_VALUE)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
