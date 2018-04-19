@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import javax.swing.JOptionPane;
+import shared.AccountState;
 import shared.ServerAccountInt;
 
 /**
@@ -24,12 +25,22 @@ public class ClientMain {
     }
 
     void depositar(double amount) throws RemoteException {
-        System.out.println("depositando " + amount);
         conta.callDeposit(amount);
     }
 
     void sacar(double amount) throws RemoteException {
         conta.callWithdraw(amount);
+    }
+
+    boolean definirEstadoOcupado() throws RemoteException {
+        if ( conta.stateIsBusy() ) return false;
+        conta.callSetState(AccountState.BUSY);
+        return true;
+    }
+
+    boolean definirEstadoDisponivel() throws RemoteException {
+        conta.callSetState(AccountState.DONE);
+        return true;
     }
 
 
@@ -58,7 +69,6 @@ public class ClientMain {
                 Registry reg = LocateRegistry.getRegistry(connDialog.ip, connDialog.porta);
                 ServerAccountInt server = (ServerAccountInt) reg.lookup(ServerAccountInt.SERVICE_ACCOUNT);
                 cc.conta = new ClientAccount(server, mainWindow, connDialog.nickname);
-//                new Thread(cc.conta).start();
                 break;
             } catch (RemoteException | NotBoundException ex) {
                 JOptionPane.showMessageDialog(null,

@@ -36,10 +36,15 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void mostrarDialogConfirmação(String titulo, CallbackAcaoCritica acaoOk) {
+        try {
+            if ( !cm.definirEstadoOcupado() ) return;
+        } catch (RemoteException ex) { return; }
+
         JPanel panel = new JPanel( new GridLayout(0, 2) );
         NumberFormatter nfUS = new NumberFormatter( NumberFormat.getInstance(Locale.US) );
         JFormattedTextField tfQuantia = new JFormattedTextField(nfUS);
         tfQuantia.setText("0");
+        tfQuantia.requestFocus();
 
         nfUS.setValueClass(Integer.class);
         nfUS.setMinimum(0);
@@ -68,7 +73,12 @@ public class MainWindow extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,
                 "Esta operação está sendo\nrealizada por outro cliente, aguarde.",
                 "Operação Ocupada!", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
+
+        try {
+            cm.definirEstadoDisponivel();
+        } catch (RemoteException ex) { return; }
   }
 
     public void setLabelSaldo(double valor) {
@@ -85,8 +95,8 @@ public class MainWindow extends javax.swing.JFrame {
 
     public void atualizarUltimaMovimentacao(String nicknameAutor) {
         Date dNow = new Date();
-        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy 'às' H:mm:ss");
-        lbDataEAutor.setText( ft.format(dNow) + " ~ " + nicknameAutor );
+        SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy 'às' H:mm:ss 'por '");
+        lbDataEAutor.setText( ft.format(dNow) + nicknameAutor );
     }
 
     @SuppressWarnings("unchecked")
@@ -145,7 +155,7 @@ public class MainWindow extends javax.swing.JFrame {
         lbAtualizacao.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         lbAtualizacao.setText("Última Movimentação:");
 
-        lbDataEAutor.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
+        lbDataEAutor.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
         lbDataEAutor.setText("<nenhuma>");
 
         lbQuantidadeClientes.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
@@ -167,12 +177,11 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(lbNickName)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lbQuantidadeClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGap(0, 129, Short.MAX_VALUE)
-                                .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(lbSaldo)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnSacar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lbSaldo, javax.swing.GroupLayout.Alignment.TRAILING))))
                         .addGap(8, 8, 8))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,8 +234,7 @@ public class MainWindow extends javax.swing.JFrame {
         mostrarDialogConfirmação("Realizar Depósito", new CallbackAcaoCritica() {
             @Override
             public void call(double x) throws RemoteException, BusyOperationException {
-                if (x > 0)
-                    cm.depositar(x);
+                if (x > 0) cm.depositar(x);
             }
         });
     }//GEN-LAST:event_btnDepositarActionPerformed
@@ -235,8 +243,7 @@ public class MainWindow extends javax.swing.JFrame {
         mostrarDialogConfirmação("Realizar Saque", new CallbackAcaoCritica() {
             @Override
             public void call(double x) throws RemoteException, BusyOperationException {
-                if (x > 0 && getValorLabelSaldo() >= x)
-                    cm.sacar(x);
+                if (x > 0 && getValorLabelSaldo() >= x) cm.sacar(x);
             }
         });
     }//GEN-LAST:event_btnSacarActionPerformed

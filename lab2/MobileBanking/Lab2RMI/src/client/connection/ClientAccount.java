@@ -4,6 +4,7 @@ import client.GUI.MainWindow;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import shared.AccountState;
 import shared.ClientAccountInt;
 import shared.ServerAccountInt;
 
@@ -51,6 +52,14 @@ public class ClientAccount extends UnicastRemoteObject
 
     public void callWithdraw(double amount) throws RemoteException {
         sa.withdraw(nickname, amount);
+    }
+
+    public void callSetState(AccountState state) throws RemoteException {
+        sa.setState(state);
+    }
+
+    public boolean stateIsBusy() throws RemoteException {
+        return sa.getState() == AccountState.BUSY;
     }
 
     @Override

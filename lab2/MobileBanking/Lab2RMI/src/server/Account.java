@@ -3,6 +3,7 @@ package server;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import shared.AccountState;
 import shared.ClientAccountInt;
 import shared.ServerAccountInt;
 
@@ -17,11 +18,13 @@ public class Account implements ServerAccountInt {
     private List<ClientAccountInt> clients;
     private double balance;
     private String nicknameLastClientChangeBalance;
+    private AccountState state;
 
     public Account() throws RemoteException {
         clients = new ArrayList<>();
         balance = 0d;
         nicknameLastClientChangeBalance = null;
+        state = AccountState.DONE;
     }
 
 
@@ -62,17 +65,27 @@ public class Account implements ServerAccountInt {
     @Override
     public synchronized void deposit(String nickname, double amount) throws RemoteException {
         balance += amount;
-        InfoLog.printToStdout("cliente '%s' depositou %.2f", nickname, amount);
         nicknameLastClientChangeBalance = nickname;
         broadcastBalance();
+        InfoLog.printToStdout("cliente '%s' depositou %.2f", nickname, amount);
     }
 
     @Override
     public synchronized void withdraw(String nickname, double amount) throws RemoteException {
         balance -= amount;
-        InfoLog.printToStdout("cliente '%s' retirou %.2f", nickname, amount);
         nicknameLastClientChangeBalance = nickname;
         broadcastBalance();
+        InfoLog.printToStdout("cliente '%s' retirou %.2f", nickname, amount);
+    }
+
+    @Override
+    public void setState(AccountState state) throws RemoteException {
+        this.state = state;
+    }
+
+    @Override
+    public AccountState getState() throws RemoteException {
+        return state;
     }
 
 }

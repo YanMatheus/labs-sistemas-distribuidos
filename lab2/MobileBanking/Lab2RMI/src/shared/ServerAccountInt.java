@@ -11,6 +11,8 @@ public interface ServerAccountInt extends java.rmi.Remote {
     public void disconnect(ClientAccountInt ca) throws java.rmi.RemoteException;
     public void broadcastBalance() throws java.rmi.RemoteException;
     public void broadcastClientList() throws java.rmi.RemoteException;
+    public void setState(AccountState state) throws java.rmi.RemoteException;
+    public AccountState getState() throws java.rmi.RemoteException;
 
     public double showBalance() throws java.rmi.RemoteException;
     public void deposit(String nickname, double amount) throws java.rmi.RemoteException;
