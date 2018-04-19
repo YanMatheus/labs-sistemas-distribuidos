@@ -6,6 +6,8 @@ mkdir -p build
 javac -d build/ src/shared/*.java src/server/*.java
 javac -d build/ src/shared/*.java src/client/**/*.java
 
+mkdir -p build/client/GUI/drawable
+cp src/client/GUI/drawable/* build/client/GUI/drawable
 cd build
 
 echo "Main-Class: server.ServerMain" > m-servidor.txt
