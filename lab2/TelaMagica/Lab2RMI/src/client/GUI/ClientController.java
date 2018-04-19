@@ -20,15 +20,15 @@ public class ClientController {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MyMain.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
 
         ClientController cc = new ClientController();
-        MainWindow mainWindow = new MainWindow(cc);
-        mainWindow.setLocationRelativeTo(null);
-        mainWindow.setVisible(true);
-        mainWindow.setResizable(false);
+        MyMain myMain = new MyMain(cc);
+        myMain.setLocationRelativeTo(null);
+        myMain.setVisible(true);
+        myMain.setResizable(false);
 
     }
 
