@@ -43,6 +43,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         } while (true);
 
+        this.lbNickName.setText(connDialog.nickname);
         connDialog.dispose();
     }
 
@@ -97,7 +98,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnDepositar = new javax.swing.JButton();
         btnSacar = new javax.swing.JButton();
-        lbMoeda = new javax.swing.JLabel();
         lbSaldo = new javax.swing.JLabel();
         jSeparator2 = new javax.swing.JSeparator();
         lbLogado = new javax.swing.JLabel();
@@ -120,6 +120,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnDepositar.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         btnDepositar.setText("Depositar");
+        btnDepositar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnDepositar.setPreferredSize(new java.awt.Dimension(180, 60));
         btnDepositar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,6 +130,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         btnSacar.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         btnSacar.setText("Sacar");
+        btnSacar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSacar.setPreferredSize(new java.awt.Dimension(180, 60));
         btnSacar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -136,18 +138,16 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        lbMoeda.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
-        lbMoeda.setText("R$");
-
         lbSaldo.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
-        lbSaldo.setText("0,00");
+        lbSaldo.setText("R$ 0,00");
 
+        lbLogado.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         lbLogado.setText("Logado como:");
 
-        lbNickName.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        lbNickName.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
         lbNickName.setText("NickName");
 
-        lbAtualizacao.setFont(new java.awt.Font("Ubuntu", 2, 12)); // NOI18N
+        lbAtualizacao.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
         lbAtualizacao.setText("Última Atualização:");
 
         lbData.setFont(new java.awt.Font("Ubuntu", 1, 12)); // NOI18N
@@ -172,22 +172,22 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbNickName))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lbAtualizacao)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lbData)
-                                .addGap(18, 18, 18)
-                                .addComponent(lbHora))))
+                                .addGap(6, 6, 6)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lbAtualizacao)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lbData)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbHora))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(72, 72, 72)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnDepositar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(lbMoeda)
-                        .addGap(18, 18, 18)
+                        .addGap(98, 98, 98)
                         .addComponent(lbSaldo)))
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addGap(71, 71, 71))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -199,21 +199,20 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbSaldo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lbAtualizacao)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbMoeda)
-                    .addComponent(lbSaldo))
-                .addGap(24, 24, 24)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbAtualizacao)
                     .addComponent(lbData)
                     .addComponent(lbHora))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnDepositar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, Short.MAX_VALUE)
+                .addGap(20, 20, 20)
                 .addComponent(btnSacar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64))
+                .addContainerGap())
         );
 
         pack();
@@ -224,14 +223,14 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnDepositarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDepositarActionPerformed
-        mostrarDialogConfirmação("Realizar Depósito", 
+        mostrarDialogConfirmação("Realizar Depósito",
                 "Digite o valor para depositar", (Callable<Boolean>) () -> {
             return false;
         });
     }//GEN-LAST:event_btnDepositarActionPerformed
 
     private void btnSacarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSacarActionPerformed
-        mostrarDialogConfirmação("Realizar Saque", 
+        mostrarDialogConfirmação("Realizar Saque",
                 "Digite o valor para sacar", (Callable<Boolean>) () -> {
             return false;
         });
@@ -247,7 +246,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel lbData;
     private javax.swing.JLabel lbHora;
     private javax.swing.JLabel lbLogado;
-    private javax.swing.JLabel lbMoeda;
     private javax.swing.JLabel lbNickName;
     private javax.swing.JLabel lbSaldo;
     // End of variables declaration//GEN-END:variables
