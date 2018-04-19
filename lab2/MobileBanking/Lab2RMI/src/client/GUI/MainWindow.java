@@ -67,9 +67,9 @@ public class MainWindow extends javax.swing.JFrame {
         //
         int selectOpt = JOptionPane.showConfirmDialog(null, panel, titulo, 
                                     JOptionPane.OK_CANCEL_OPTION, 2, 
-                                    new ImageIcon("/home/victor/Área de Trabalho/moneyico.png"));
+                                    new ImageIcon("drawable/moneyico.png"));
 
-        if (selectOpt != JOptionPane.OK_OPTION) System.exit(0);
+        //if (selectOpt != JOptionPane.OK_OPTION));
 
         String serverHost = serverHostField.getText();
         int serverPort = Integer.parseInt(
@@ -83,6 +83,11 @@ public class MainWindow extends javax.swing.JFrame {
                 "Não foi possível efetuar a operação",
                 "Erro na Operação", JOptionPane.ERROR_MESSAGE);
         }
+  }
+    
+    
+  public void setLabelSaldo(Double valor) {
+      lbSaldo.setText("R$" + valor.toString());
   }
     
     
