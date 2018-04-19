@@ -9,7 +9,7 @@ package client.GUI;
  */
 public class ConnectionDialog extends javax.swing.JDialog {
     String ip = null;
-    int port = 0;
+    String nickname = null;
 
     public ConnectionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -33,7 +33,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         ipTextField = new javax.swing.JFormattedTextField();
-        portTextField = new javax.swing.JFormattedTextField();
+        nicknameTextField = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -66,15 +66,16 @@ public class ConnectionDialog extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
         jLabel1.setForeground(java.awt.Color.white);
-        jLabel1.setText("IP:Porta:");
+        jLabel1.setText("<IP>:<Porta>");
 
         jLabel2.setFont(new java.awt.Font("Microsoft JhengHei", 1, 12)); // NOI18N
         jLabel2.setForeground(java.awt.Color.white);
-        jLabel2.setText("Nickname:");
+        jLabel2.setText("nickname");
 
         ipTextField.setBackground(java.awt.Color.darkGray);
         ipTextField.setForeground(java.awt.Color.white);
-        ipTextField.setToolTipText("digite o endereço IP do servidor");
+        ipTextField.setText("localhost:6789");
+        ipTextField.setToolTipText("digite o endereço IP do servidor seguido da porta");
         ipTextField.setCaretColor(java.awt.Color.white);
         ipTextField.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         ipTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
@@ -84,27 +85,31 @@ public class ConnectionDialog extends javax.swing.JDialog {
             }
         });
         ipTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                ipTextFieldKeyTyped(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 ipTextFieldKeyReleased(evt);
             }
         });
 
-        portTextField.setBackground(java.awt.Color.darkGray);
-        portTextField.setForeground(java.awt.Color.white);
-        portTextField.setToolTipText("digite a porta para a conexão com o servidor");
-        portTextField.setCaretColor(java.awt.Color.white);
-        portTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
-        portTextField.addActionListener(new java.awt.event.ActionListener() {
+        nicknameTextField.setBackground(java.awt.Color.darkGray);
+        nicknameTextField.setForeground(java.awt.Color.white);
+        nicknameTextField.setText("foo");
+        nicknameTextField.setToolTipText("digite a porta para a conexão com o servidor");
+        nicknameTextField.setCaretColor(java.awt.Color.white);
+        nicknameTextField.setSelectionColor(new java.awt.Color(0, 230, 118));
+        nicknameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                portTextFieldActionPerformed(evt);
+                nicknameTextFieldActionPerformed(evt);
             }
         });
-        portTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+        nicknameTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                portTextFieldKeyTyped(evt);
+                nicknameTextFieldKeyTyped(evt);
             }
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                portTextFieldKeyReleased(evt);
+                nicknameTextFieldKeyReleased(evt);
             }
         });
 
@@ -129,7 +134,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
                             .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ipTextField)
-                            .addComponent(portTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(nicknameTextField, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(48, 48, 48))
         );
@@ -145,7 +150,7 @@ public class ConnectionDialog extends javax.swing.JDialog {
                 .addGap(33, 33, 33)
                 .addGroup(dialogPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(3, 3, 3)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(52, 52, 52)
@@ -170,8 +175,8 @@ public class ConnectionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-        this.ip   = ipTextField.getText().trim();
-        this.port = Integer.parseInt( portTextField.getText().trim() );
+        this.ip  = ipTextField.getText();
+        this.nickname = nicknameTextField.getText();
 
         this.setVisible(false);
     }//GEN-LAST:event_btnConectarActionPerformed
@@ -180,31 +185,33 @@ public class ConnectionDialog extends javax.swing.JDialog {
         System.exit(0);
     }//GEN-LAST:event_cancelButtonActionPerformed
 
-    private void portTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portTextFieldKeyTyped
-        char enter = evt.getKeyChar();
-        if ( !Character.isDigit(enter)
-          || portTextField.getText().trim().length() >= 5) evt.consume();
-    }//GEN-LAST:event_portTextFieldKeyTyped
-
     private void ipTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ipTextFieldKeyReleased
-        String portText = portTextField.getText().trim();
+        String nicknameText = nicknameTextField.getText().trim();
         String serverIP = ipTextField.getText().trim();
-        btnConectar.setEnabled( !portText.isEmpty() && !serverIP.isEmpty() );
+        btnConectar.setEnabled( !nicknameText.isEmpty() && !serverIP.isEmpty() );
     }//GEN-LAST:event_ipTextFieldKeyReleased
 
-    private void portTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portTextFieldKeyReleased
-        String portText = portTextField.getText().trim();
-        String serverIP = ipTextField.getText().trim();
-        btnConectar.setEnabled( !portText.isEmpty() && !serverIP.isEmpty() );
-    }//GEN-LAST:event_portTextFieldKeyReleased
-
-    private void portTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portTextFieldActionPerformed
+    private void nicknameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nicknameTextFieldActionPerformed
         if ( btnConectar.isEnabled() ) btnConectarActionPerformed(evt);
-    }//GEN-LAST:event_portTextFieldActionPerformed
+    }//GEN-LAST:event_nicknameTextFieldActionPerformed
 
     private void ipTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ipTextFieldActionPerformed
         if ( btnConectar.isEnabled() ) btnConectarActionPerformed(evt);
     }//GEN-LAST:event_ipTextFieldActionPerformed
+
+    private void nicknameTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nicknameTextFieldKeyReleased
+        String nicknameText = nicknameTextField.getText();
+        String serverIP = ipTextField.getText();
+        btnConectar.setEnabled( !nicknameText.isEmpty() && !serverIP.isEmpty() );
+    }//GEN-LAST:event_nicknameTextFieldKeyReleased
+
+    private void nicknameTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nicknameTextFieldKeyTyped
+        if ( Character.isSpaceChar(evt.getKeyChar()) ) evt.consume();
+    }//GEN-LAST:event_nicknameTextFieldKeyTyped
+
+    private void ipTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_ipTextFieldKeyTyped
+        if ( Character.isSpaceChar(evt.getKeyChar()) ) evt.consume();
+    }//GEN-LAST:event_ipTextFieldKeyTyped
 
 
 
@@ -217,6 +224,6 @@ public class ConnectionDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JFormattedTextField portTextField;
+    private javax.swing.JFormattedTextField nicknameTextField;
     // End of variables declaration//GEN-END:variables
 }
